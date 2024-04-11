@@ -1,0 +1,5 @@
+# exclude everything
+DATASETS/*
+
+# exception to the rule
+DATASETS/README

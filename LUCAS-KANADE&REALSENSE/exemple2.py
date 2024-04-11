@@ -166,7 +166,7 @@ img = cv2.add(frame, mask)
 #plt.figure(1)
 #plt.plot(img)
 #cv2.imshow('frame', img)
-cv2.imwrite('frame.png', img)  # Write frame to output video
+cv2.imwrite('../DATASETS/frame.png', img)  # Write frame to output video
 
 # Update previous frame and previous points
 old_gray = frame_gray.copy()
