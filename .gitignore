@@ -1,5 +1,0 @@
-# exclude everything
-DATA/*
-
-# exception to the rule
-DATA/README
