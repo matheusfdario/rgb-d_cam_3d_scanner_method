@@ -1,5 +1,5 @@
 # exclude everything
-DATASETS/*
+DATA/*
 
 # exception to the rule
-DATASETS/README
+DATA/README
