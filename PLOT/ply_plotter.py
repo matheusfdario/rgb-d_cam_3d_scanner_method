@@ -4,64 +4,81 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import open3d as o3d
 
-import matplotlib as mpl
-mpl.use("Qt5Agg")
-
 # Read .ply file
-input_file = r"C:\Users\Victor\Documents\realsense\ply\_1710512713820.04589843750000.ply"
+#input_file = "out.ply"
+input_file = "/home/matheusfdario/Documentos/LASSIP/rep/pyrealsense_test/fenda.ply"
 pcd = o3d.io.read_point_cloud(input_file) # Read the point cloud
 
 # Visualize the point cloud within open3d
 o3d.visualization.draw_geometries([pcd])
 
+# Convert open3d format to numpy array
+# Here, you have the point cloud in numpy format.
 point_cloud_in_numpy = np.asarray(pcd.points)
 
-data = point_cloud_in_numpy
+# max_size = point_cloud_in_numpy.shape[0]
+# view_size = 20000
+# limit_inf = int(max_size/2-view_size/2)
+# limit_sup = int(max_size/2+view_size/2)
+
+#data = point_cloud_in_numpy[limit_inf:limit_sup]
+
+
+point_cloud_valid_only = np.zeros_like(point_cloud_in_numpy)
+
+z_min = -0.2
+
+cont = 0
+
+for i in range(point_cloud_in_numpy.shape[0]):
+    if(point_cloud_in_numpy[i,2]>z_min):
+        point_cloud_valid_only[cont] = point_cloud_in_numpy[i]
+        cont = cont + 1
+
+data = np.zeros([cont+1,3])
+data = point_cloud_valid_only[0:cont]
 
 # Split the data into x, y, and z arrays
-x = data[::100, 0]
-y = data[::100, 1]
-z = data[::100, 2]
+x = data[:, 0]
+y = data[:, 1]
+z = data[:, 2]
 
 # Create a 3D figure
-fig = plt.figure(figsize=[16,9])
+fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
 # Plot the point cloud data
-# ax.scatter(x, y, z, s=0.01)
-ax.plot_trisurf(x, y, z, cmap='jet')
+ax.scatter(x, y, z, s=1)
 
 # Set the axis labels
 ax.set_xlabel('X Label')
 ax.set_ylabel('Y Label')
 ax.set_zlabel('Z Label')
 ax.set_aspect('equal')
-
 # Show the plot
 plt.show()
 
-# # o3d.io.write_image("filename.png",pcd.Image)
 
-# # Calcular a profundidade máxima e mínima para normalização
-# z_min = np.min(z)
-# z_max = np.max(z)
-#
-# # Normalizar as profundidades para o intervalo [0, 1]
-# normalized_z = (z - z_min) / (z_max - z_min)
-#
-# # Criar uma nova figura
-# fig = plt.figure()
-#
-# # Criar um subplot 2D
-# ax = fig.add_subplot(111)
-#
-# # Plotar os pontos como uma nuvem de pontos 2D, com a cor definida pela profundidade
-# ax.scatter(x, y, c=normalized_z, cmap='viridis')
-#
-# # Definir rótulos do eixo x e y
-# ax.set_xlabel('X')
-# ax.set_ylabel('Y')
-#
-# # Mostrar a plotagem
-# plt.show()
 
+#
+#
+#
+# def get_pts(infile):
+#     data = np.loadtxt(infile, delimiter=',')
+#     return data[12:, 0], data[12:, 1], data[12:, 2]  # returns X,Y,Z points skipping the first 12 lines
+#
+#
+# def plot_ply(infile):
+#     fig = plt.figure()
+#     ax = fig.add_subplot(111, projection='3d')
+#     x, y, z = get_pts(infile)
+#     ax.scatter(x, y, z, c='r', marker='o')
+#     ax.set_xlabel('X Label')
+#     ax.set_ylabel('Y Label')
+#     ax.set_zlabel('Z Label')
+#     plt.show()
+#
+#
+# if __name__ == '__main__':
+#     infile = 'out.ply'
+#     plot_ply(infile)
