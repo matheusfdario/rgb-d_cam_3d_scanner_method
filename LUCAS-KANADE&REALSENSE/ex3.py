@@ -323,8 +323,6 @@ B = np.asarray(list_d[1])
 n = data.shape[0]
 
 Rc, tc = euclidean_transform_3D(A, B)
-tc = tc.reshape(3,1)
-t0 = np.tile(tc, (1, n))
 data_transformed = (Rc@data.T) + np.tile(tc, (1, n))
 data_transformed = data_transformed.T
 
