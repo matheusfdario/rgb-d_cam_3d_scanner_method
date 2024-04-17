@@ -56,7 +56,7 @@ def euclidean_transform_3D(A, B):
         print('new R', R)
 
     t = -R @ centroid_A.T + centroid_B.T
-
+    t = t.reshape(3, 1)
     return R, t
 
 
@@ -315,13 +315,23 @@ for loop in range(2):
 
 pipe.stop()
 print("Frames Captured")
+
+
+
 A = np.asarray(list_d[0])
 B = np.asarray(list_d[1])
 n = data.shape[0]
 
 Rc, tc = euclidean_transform_3D(A, B)
-data = (Rc@data.T) + np.tile(tc, data.shape)
-data = data.T
+tc = tc.reshape(3,1)
+t0 = np.tile(tc, (1, n))
+data_transformed = (Rc@data.T) + np.tile(tc, (1, n))
+data_transformed = data_transformed.T
+
+#r0 = Rc@data.T
+#t0 = np.tile(tc, (nn0)
+#data = (Rc@data.T) + np.tile(tc, data.shape)
+#data = data.T
 
 #data1 = (Rc @ data.T)
 #data = (Rc @ data.T) + np.transpose(np.tile(tc, (1, n)))
@@ -329,9 +339,9 @@ data = data.T
 #data = data.T
 
 # Split the data into x, y, and z arrays
-x = data[::10, 0]
-y = data[::10, 1]
-z = data[::10, 2]
+x = data_transformed[::10, 0]
+y = data_transformed[::10, 1]
+z = data_transformed[::10, 2]
 #x = data[:, 0]
 #y = data[:, 1]
 #z = data[:, 2]
