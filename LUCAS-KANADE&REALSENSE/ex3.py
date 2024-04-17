@@ -141,7 +141,7 @@ list_d = [[],[]]
 # cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
 # cv2.imshow('RealSense', images)
 # cv2.waitKey(1)
-for loop in range(2):
+for j in range(2):
     # Store next frameset for later processing:
     frameset = pipe.wait_for_frames()
     color_frame = frameset.get_color_frame()
@@ -207,7 +207,7 @@ for loop in range(2):
         try:
             depth = depth_frame.get_distance(a, b)
             depth_point = rs.rs2_deproject_pixel_to_point(depth_intrin, [a, b], depth)
-            list_d[loop].append(depth_point)
+            list_d[j].append(depth_point)
             print(i, a, b, depth_point)
         except:
             print(i, a, b, 'OUT')
@@ -291,13 +291,13 @@ for loop in range(2):
     #x = data[:, 0]
     #y = data[:, 1]
     #z = data[:, 2]
-    depro = np.asanyarray(list_d[loop])
+    depro = np.asanyarray(list_d[j])
     xd = depro[:,0]
     yd = depro[:,1]
     zd = depro[:,2]
 
     # Create a 3D figure
-    fig = plt.figure(loop)
+    fig = plt.figure(j)
     ax = fig.add_subplot(111, projection='3d')
 
     # Plot the point cloud data
@@ -343,13 +343,13 @@ z = data_transformed[::10, 2]
 #x = data[:, 0]
 #y = data[:, 1]
 #z = data[:, 2]
-depro = np.asanyarray(list_d[loop])
+depro = np.asanyarray(list_d[j])
 xd = depro[:,0]
 yd = depro[:,1]
 zd = depro[:,2]
 
 # Create a 3D figure
-fig = plt.figure(loop+1)
+fig = plt.figure(j+1)
 ax = fig.add_subplot(111, projection='3d')
 
 # Plot the point cloud data
