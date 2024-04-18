@@ -14,7 +14,10 @@ import pyrealsense2 as rs  # Intel RealSense cross-platform open-source API
 
 print("Environment Ready")
 
-
+def get_distance_3D(p1,p2):
+    squared_dist = np.sum(np.square(p1 - p2))
+    distance = np.sqrt(squared_dist)
+    return distance
 def euclidean_transform_3D(A, B):
     '''
         A,B - Nx3 matrix
@@ -43,19 +46,20 @@ def euclidean_transform_3D(A, B):
 
     # resulting rotation
     R = Vt.T * U.T
-    print('R', R)
+    #print('R', R)
     # prinyt(Vt)
-    print(Vt)
+    #print(Vt)
     # handle svd sign problem
     if np.linalg.det(R) < 0:
         print("sign")
         # thanks to @valeriy.krygin to pointing me on a bug here
         Vt[2, :] *= -1
         R = Vt.T @ U.T
-        print('new R', R)
+        #print('new R', R)
 
     t = -R @ centroid_A.T + centroid_B.T
-    t = t.reshape(3, 1)
+    #t = t.T
+    t = t.reshape(3,1)
     return R, t
 
 
@@ -293,17 +297,34 @@ for j in range(frame_num):
     data = point_cloud_valid_only[0:cont]
 
     if (j > 0):
-        A = np.asarray(list_d[j - 1])
-        B = np.asarray(list_d[j])
-        n = data.shape[0]
+        A = np.asarray(list_d[j]) # ESTAVA INVERTIDO
+        B = np.asarray(list_d[j-1])
+        print('A', A, A.shape)
+        print('B', B, B.shape)
+        n = A.shape[0]
 
         Rc, tc = euclidean_transform_3D(A, B)
+        print('tc',tc)
+        #tc = np.asarray([tc[2],tc[0],tc[1]])
+        #tc = np.asarray([tc[1], tc[2], tc[0]])
+        tc = np.flip(tc)
+        print('tc mod', tc)
+        A_transformed = (Rc @ A.T) + np.tile(tc, (1, n))
+        A_transformed = A_transformed.T
+        n = data.shape[0]
         data_transformed = (Rc @ data.T) + np.tile(tc, (1, n))
+        ajust = np.asarray([0,0,0.01]).reshape(3,1)
+        #data_transformed = data_transformed + np.tile(ajust, (1, n))
         data_transformed = data_transformed.T
-        data = data_transformed
-        data_all = np.vstack((data_all, data))
+        rmse = np.sqrt(np.mean(np.square(A_transformed - B)))
+        print("RMSE:", rmse)
+        data1 = data_transformed
+
+        data_all = np.vstack((data_all, data1))
+
     else:
         data_all = data
+        data0 = data
     data_list.append(data.tolist())
     # Split the data into x, y, and z arrays
     x = data[::10, 0]
@@ -332,14 +353,28 @@ for j in range(frame_num):
 pipe.stop()
 print("Frames Captured")
 
-# A = np.asarray(list_d[0])
-# B = np.asarray(list_d[1])
-# n = data.shape[0]
+A0 = np.asarray(list_d[1])
+B0 = np.asarray(list_d[0])
+n = A0.shape[0]
+Rc, tc = euclidean_transform_3D(A0, B0)
+A = (Rc@A0.T) + np.tile(tc, (1, n))
+A = A.T
+for w in range(10):
+    rmse = np.sqrt(np.mean(np.square(A - B0)))
+    print("RMSE ", w, ": ", rmse)
+    Rc, tc = euclidean_transform_3D(A, B0)
+    A = (Rc@A.T) + np.tile(tc, (1, n))
+    A = A.T
+    dist = get_distance_3D(A0,B0)
+    dist_trans = get_distance_3D(A,B0)
+    print(w,dist,dist_trans,dist-dist_trans)
 
-# Rc, tc = euclidean_transform_3D(A, B)
-# data_transformed = (Rc@data.T) + np.tile(tc, (1, n))
-# data_transformed = data_transformed.T
-
+    Rc, tc = euclidean_transform_3D(A, B0)
+# Rc, tc = euclidean_transform_3D(A_transformed, B)
+# A_transformed2 = (Rc@A_transformed.T) + np.tile(tc, (1, n))
+# A_transformed2 = A_transformed2.T
+# rmse = np.sqrt(np.mean(np.square(A_transformed2 - B)))
+# print ("RMSE2:", rmse)
 # r0 = Rc@data.T
 # t0 = np.tile(tc, (nn0)
 # data = (Rc@data.T) + np.tile(tc, data.shape)
@@ -358,25 +393,25 @@ z = data_all[::10, 2]
 # x = data[:, 0]
 # y = data[:, 1]
 # z = data[:, 2]
-
-depro0 = np.asanyarray(list_d[0])
-xd0 = depro0[:, 0]
-yd0 = depro0[:, 1]
-zd0 = depro0[:, 2]
-depro1 = np.asanyarray(list_d[1])
-xd1 = depro0[:, 0]
-yd1 = depro0[:, 1]
-zd1 = depro0[:, 2]
-
-
+#
+# depro0 = np.asanyarray(list_d[0])
+# xd0 = depro0[:, 0]
+# yd0 = depro0[:, 1]
+# zd0 = depro0[:, 2]
+# depro1 = np.asanyarray(list_d[1])
+# xd1 = depro0[:, 0]
+# yd1 = depro0[:, 1]
+# zd1 = depro0[:, 2]
+#
+#
 # Create a 3D figure
 fig = plt.figure(j + 1)
 ax = fig.add_subplot(111, projection='3d')
 
 # Plot the point cloud data
 
-ax.scatter(xd0, yd0, zd0, s=10.0, alpha=1.0,color="orange")
-ax.scatter(xd1, yd1, zd1, s=10.0, alpha=1.0,color="red")
+#ax.scatter(xd0, yd0, zd0, s=10.0, alpha=1.0,color="orange")
+#ax.scatter(xd1, yd1, zd1, s=10.0, alpha=1.0,color="red")
 ax.scatter(x, y, z, s=1, alpha=0.05,color="blue")
 
 # Set the axis labels
@@ -384,5 +419,42 @@ ax.set_xlabel('X Label')
 ax.set_ylabel('Y Label')
 ax.set_zlabel('Z Label')
 ax.set_aspect('equal')
-# Show the plot
+# # Show the plot
+# #plt.show()
+#
+# # Split the data into x, y, and z arrays
+# depro0 = np.asanyarray(list_d[0][0])
+# depro1 = np.asanyarray(list_d[1][0])
+#
+# depro_max = np.max((depro0.max(),depro1.max()))
+# depro_min = np.min((depro0.min(),depro1.min()))
+# depro0 = (depro0-depro_min)/(depro_max-depro_min)
+# depro1 = (depro1-depro_min)/(depro_max-depro_min)
+# ganho = 1000
+# depro0 = depro0*ganho
+# depro1 = depro1*ganho
+# xd0 = depro0[0]
+# yd0 = depro0[1]
+# zd0 = depro0[2]
+#
+# xd1 = depro0[0]
+# yd1 = depro0[1]
+# zd1 = depro0[2]
+#
+#
+# # Create a 3D figure
+# fig = plt.figure(j + 2)
+# ax = fig.add_subplot(111, projection='3d')
+#
+# # Plot the point cloud data
+#
+# ax.scatter(xd0, yd0, zd0,color="blue")
+# ax.scatter(xd1, yd1, zd1, color="red")
+#
+# # Set the axis labels
+# ax.set_xlabel('X Label')
+# ax.set_ylabel('Y Label')
+# ax.set_zlabel('Z Label')
+# ax.set_aspect('equal')
+# # Show the plot
 plt.show()
