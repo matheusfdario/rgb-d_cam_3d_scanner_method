@@ -4,6 +4,7 @@ import matplotlib
 
 import open3d as o3d
 
+
 matplotlib.use('TkAgg', force=True)
 from matplotlib import pyplot as plt
 
@@ -35,8 +36,8 @@ def euclidean_transform_3D(A, B):
     BB = B - np.tile(centroid_B, (N, 1))
 
     # covariance of datasets
-    # H = np.transpose(AA) * BB
-    # H = np.transpose(AA).dot(BB)
+    #H = np.transpose(AA) * BB
+    #H = np.transpose(AA).dot(BB)
     H = np.transpose(AA) @ BB
     # matrix decomposition on rotation, scaling and rotation matrices
     U, S, Vt = np.linalg.svd(H)
@@ -51,7 +52,7 @@ def euclidean_transform_3D(A, B):
         print("sign")
         # thanks to @valeriy.krygin to pointing me on a bug here
         Vt[2, :] *= -1
-        R = Vt.T @ U.T
+        R = Vt.T * U.T
         print('new R', R)
 
     t = -R @ centroid_A.T + centroid_B.T
@@ -60,10 +61,6 @@ def euclidean_transform_3D(A, B):
 
 
 ply_path = '/media/matheusfdario/HD/REALSENSE/test/data/EXTRACTED DATA/PLY/ply_1710437557553.69335937500000.ply'
-
-frame_num = 2
-
-data_list = []
 # Setup:
 pipe = rs.pipeline()
 cfg = rs.config()
@@ -72,13 +69,13 @@ profile = pipe.start(cfg)
 
 # Parameters for ShiTomasi corner detection
 feature_params = dict(maxCorners=10,
-                      qualityLevel=0.5,
-                      minDistance=80,
-                      blockSize=10)
+                      qualityLevel=0.3,
+                      minDistance=7,
+                      blockSize=7)
 
 # Parameters for Lucas-Kanade optical flow
-lk_params = dict(winSize=(20, 20),
-                 maxLevel=3,
+lk_params = dict(winSize=(15, 15),
+                 maxLevel=2,
                  criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
 
 # Skip 5 first frames to give the Auto-Exposure time to adjust
@@ -89,6 +86,8 @@ lk_params = dict(winSize=(20, 20),
 frameset = pipe.wait_for_frames()
 color_frame = frameset.get_color_frame()
 depth_frame = frameset.get_depth_frame()
+
+
 
 print('a')
 # Cleanup:
@@ -134,7 +133,7 @@ p0 = cv2.goodFeaturesToTrack(old_gray, mask=None, **feature_params)
 mask = np.zeros_like(old_frame)
 list_x = []
 list_y = []
-list_d = [[], []]
+list_d = [[],[]]
 
 # Show the two frames together:
 # images = np.hstack((color, colorized_depth))
@@ -142,7 +141,7 @@ list_d = [[], []]
 # cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
 # cv2.imshow('RealSense', images)
 # cv2.waitKey(1)
-for j in range(frame_num):
+for j in range(2):
     # Store next frameset for later processing:
     frameset = pipe.wait_for_frames()
     color_frame = frameset.get_color_frame()
@@ -184,9 +183,6 @@ for j in range(frame_num):
     # Calculate optical flow
     p1, st, err = cv2.calcOpticalFlowPyrLK(old_gray, frame_gray, p0, None, **lk_params)
 
-    if(p1.shape != p0.shape):
-        exit()
-
     # Select good points
     if p1 is not None:
         good_new = p1[st == 1]
@@ -208,28 +204,23 @@ for j in range(frame_num):
         #        print(i, 'OUT: B')
         # else:
         #    print(i, 'OUT: A')
-        deprojection_check = True
-        while(deprojection_check):
-            try:
-                depth = depth_frame.get_distance(a, b)
-                depth_point = rs.rs2_deproject_pixel_to_point(depth_intrin, [a, b], depth)
-                list_d[j].append(depth_point)
-                print(i, a, b, depth_point)
-                deprojection_check = False
-            except:
-                print(i, a, b, 'OUT')
-
-
+        try:
+            depth = depth_frame.get_distance(a, b)
+            depth_point = rs.rs2_deproject_pixel_to_point(depth_intrin, [a, b], depth)
+            list_d[j].append(depth_point)
+            print(i, a, b, depth_point)
+        except:
+            print(i, a, b, 'OUT')
     list_x.append(a)
     list_y.append(b)
-    # plt.figure(1)
-    # plt.plot('frame', img)
+    #plt.figure(1)
+    #plt.plot('frame', img)
 
-    # img = cv2.add(frame, mask)
-    # plt.figure(1)
-    # plt.plot(img)
-    # cv2.imshow('frame', img)
-    # cv2.imwrite('../DATASETS/frame.png', img)  # Write frame to output video
+    #img = cv2.add(frame, mask)
+    #plt.figure(1)
+    #plt.plot(img)
+    #cv2.imshow('frame', img)
+    #cv2.imwrite('../DATASETS/frame.png', img)  # Write frame to output video
 
     # Update previous frame and previous points
     old_gray = frame_gray.copy()
@@ -239,10 +230,10 @@ for j in range(frame_num):
     # Update previous frame and previous points
     old_gray = frame_gray.copy()
     p0 = good_new.reshape(-1, 1, 2)
-
+    
     # Show the two frames together:
     images = np.hstack((color, colorized_depth))
-
+    
     cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
     cv2.imshow('RealSense', images)
     cv2.waitKey(1)
@@ -259,24 +250,25 @@ for j in range(frame_num):
             break
     '''
 
-    # pcd = o3d.io.read_point_cloud(ply_path) # Read the point cloud
+
+    #pcd = o3d.io.read_point_cloud(ply_path) # Read the point cloud
 
     # Visualize the point cloud within open3d
-    # o3d.visualization.draw_geometries([pcd])
+    #o3d.visualization.draw_geometries([pcd])
 
     # Convert open3d format to numpy array
     # Here, you have the point cloud in numpy format.
 
-    # point_cloud_in_numpy = np.asarray(pcd.points)
-    vtx_list = vtx.tolist()
-    data_list.append(vtx_list)
-    point_cloud_in_numpy = np.asarray(vtx_list)
+    #point_cloud_in_numpy = np.asarray(pcd.points)
+
+    point_cloud_in_numpy = np.asarray(vtx.tolist())
     # max_size = point_cloud_in_numpy.shape[0]
     # view_size = 20000
     # limit_inf = int(max_size/2-view_size/2)
     # limit_sup = int(max_size/2+view_size/2)
 
-    # data = point_cloud_in_numpy[limit_inf:limit_sup]
+    #data = point_cloud_in_numpy[limit_inf:limit_sup]
+
 
     point_cloud_valid_only = np.zeros_like(point_cloud_in_numpy)
 
@@ -285,40 +277,32 @@ for j in range(frame_num):
     cont = 0
 
     for i in range(point_cloud_in_numpy.shape[0]):
-        if (np.max(np.abs(point_cloud_in_numpy[i])) < limiar):
+        if(np.max(np.abs(point_cloud_in_numpy[i]))<limiar):
             point_cloud_valid_only[cont] = point_cloud_in_numpy[i]
             cont = cont + 1
 
-    data = np.zeros([cont + 1, 3])
+    data = np.zeros([cont+1,3])
     data = point_cloud_valid_only[0:cont]
 
-    if (j > 0):
-        A = np.asarray(list_d[j - 1])
-        B = np.asarray(list_d[j])
-        n = data.shape[0]
-
-        Rc, tc = euclidean_transform_3D(A, B)
-        data_transformed = (Rc @ data.T) + np.tile(tc, (1, n))
-        data_transformed = data_transformed.T
-        data = data_transformed
-        data_all = np.vstack((data_all, data))
-    else:
-        data_all = data
-    data_list.append(data.tolist())
     # Split the data into x, y, and z arrays
     x = data[::10, 0]
     y = data[::10, 1]
     z = data[::10, 2]
-    # x = data[:, 0]
-    # y = data[:, 1]
-    # z = data[:, 2]
+    #x = data[:, 0]
+    #y = data[:, 1]
+    #z = data[:, 2]
+    depro = np.asanyarray(list_d[j])
+    xd = depro[:,0]
+    yd = depro[:,1]
+    zd = depro[:,2]
 
     # Create a 3D figure
     fig = plt.figure(j)
     ax = fig.add_subplot(111, projection='3d')
 
     # Plot the point cloud data
-    ax.scatter(x, y, z, s=1, alpha=0.05,color="orange")
+    ax.scatter(xd,yd,zd,s=10,alpha=1.0)
+    ax.scatter(x, y, z, s=1,alpha=0.05,cmap='jet')
 
     # Set the axis labels
     ax.set_xlabel('X Label')
@@ -332,52 +316,45 @@ for j in range(frame_num):
 pipe.stop()
 print("Frames Captured")
 
-# A = np.asarray(list_d[0])
-# B = np.asarray(list_d[1])
-# n = data.shape[0]
 
-# Rc, tc = euclidean_transform_3D(A, B)
-# data_transformed = (Rc@data.T) + np.tile(tc, (1, n))
-# data_transformed = data_transformed.T
 
-# r0 = Rc@data.T
-# t0 = np.tile(tc, (nn0)
-# data = (Rc@data.T) + np.tile(tc, data.shape)
-# data = data.T
+A = np.asarray(list_d[0])
+B = np.asarray(list_d[1])
+n = data.shape[0]
 
-# data1 = (Rc @ data.T)
-# data = (Rc @ data.T) + np.transpose(np.tile(tc, (1, n)))
-# tc_to_add = np.tile(tc, data.shape[0])
-# data = data.T
+Rc, tc = euclidean_transform_3D(A, B)
+data_transformed = (Rc@data.T) + np.tile(tc, (1, n))
+data_transformed = data_transformed.T
+
+#r0 = Rc@data.T
+#t0 = np.tile(tc, (nn0)
+#data = (Rc@data.T) + np.tile(tc, data.shape)
+#data = data.T
+
+#data1 = (Rc @ data.T)
+#data = (Rc @ data.T) + np.transpose(np.tile(tc, (1, n)))
+#tc_to_add = np.tile(tc, data.shape[0])
+#data = data.T
 
 # Split the data into x, y, and z arrays
-x = data_all[::10, 0]
-y = data_all[::10, 1]
-z = data_all[::10, 2]
-
-# x = data[:, 0]
-# y = data[:, 1]
-# z = data[:, 2]
-
-depro0 = np.asanyarray(list_d[0])
-xd0 = depro0[:, 0]
-yd0 = depro0[:, 1]
-zd0 = depro0[:, 2]
-depro1 = np.asanyarray(list_d[1])
-xd1 = depro0[:, 0]
-yd1 = depro0[:, 1]
-zd1 = depro0[:, 2]
-
+x = data_transformed[::10, 0]
+y = data_transformed[::10, 1]
+z = data_transformed[::10, 2]
+#x = data[:, 0]
+#y = data[:, 1]
+#z = data[:, 2]
+depro = np.asanyarray(list_d[j])
+xd = depro[:,0]
+yd = depro[:,1]
+zd = depro[:,2]
 
 # Create a 3D figure
-fig = plt.figure(j + 1)
+fig = plt.figure(j+1)
 ax = fig.add_subplot(111, projection='3d')
 
 # Plot the point cloud data
-
-ax.scatter(xd0, yd0, zd0, s=10.0, alpha=1.0,color="orange")
-ax.scatter(xd1, yd1, zd1, s=10.0, alpha=1.0,color="red")
-ax.scatter(x, y, z, s=1, alpha=0.05,color="blue")
+ax.scatter(xd,yd,zd,s=10,alpha=1.0)
+ax.scatter(x, y, z, s=1,alpha=0.05,cmap='jet')
 
 # Set the axis labels
 ax.set_xlabel('X Label')
