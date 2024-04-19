@@ -62,6 +62,58 @@ def euclidean_transform_3D(A, B):
     t = t.reshape(3,1)
     return R, t
 
+def test(fig_num):
+    R = np.mat(np.random.rand(3,3))
+    t = np.mat(np.random.rand(3,1))
+
+    U, S, Vt = np.linalg.svd(R)
+    R = U*Vt
+
+    if np.linalg.det(R) < 0:
+        print('sign')
+        Vt[2,:] *= -1
+        R = U*Vt
+    n = 10
+
+    A = np.mat(np.random.rand(n,3));
+    B = R*A.T + np.tile(t, (1, n))
+    B = B.T;
+
+    xa = A[:, 0]
+    ya = A[:, 1]
+    za = A[:, 2]
+
+    xb = B[:, 0]
+    yb = B[:, 1]
+    zb = B[:, 2]
+
+    # Create a 3D figure
+    fig = plt.figure(fig_num)
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Plot the point cloud data
+
+    ax.scatter(xa, ya, za, color="blue")
+    ax.scatter(xb, yb, zb, color="red")
+    
+    # Set the axis labels
+    ax.set_xlabel('X Label')
+    ax.set_ylabel('Y Label')
+    ax.set_zlabel('Z Label')
+    ax.set_aspect('equal')
+    # # Show the plot
+    # #plt.show()
+
+    # recover the transformation
+    Rc, tc = euclidean_transform_3D(A, B)
+
+    A_transformed = (Rc*A.T) + np.tile(tc, (1, n))
+    A_transformed = A_transformed.T
+
+    # Find the error
+    rmse = np.sqrt(np.mean(np.square(A_transformed - B)))
+    print ("RMSE:", rmse)
+
 
 ply_path = '/media/matheusfdario/HD/REALSENSE/test/data/EXTRACTED DATA/PLY/ply_1710437557553.69335937500000.ply'
 
