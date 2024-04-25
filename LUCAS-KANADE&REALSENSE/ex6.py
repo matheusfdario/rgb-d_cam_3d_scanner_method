@@ -9,7 +9,7 @@ from skimage.transform import warp, AffineTransform
 from skimage.exposure import rescale_intensity
 from skimage.color import rgb2gray
 from skimage.measure import ransac
-
+from scipy.spatial import distance
 import open3d as o3d
 
 matplotlib.use('TkAgg', force=True)
@@ -407,10 +407,12 @@ for j in range(frame_num):
 
     data = np.zeros([cont + 1, 3])
     data = point_cloud_valid_only[0:cont]
+
     if(j==0):
         data0 = data
     else:
         data1 = data
+
     #if (j > 0):
     #     A = np.asarray(list_d[j])  # ESTAVA INVERTIDO
     #     B = np.asarray(list_d[j - 1])
@@ -572,8 +574,23 @@ print("Frames Captured")
 # ax.set_zlabel('Z Label')
 # ax.set_aspect('equal')
 # # Show the plot
+
+dist0 = distance.cdist(D0, data0)
+dist1 = distance.cdist(D1, data1)
+print('dist0',dist0.shape)
+for i in range(dist0.shape[0]):
+    print('i: ',i," d0_min: ",np.min(dist0[i])," d1_min: ",np.min(dist1[i]))
+for i in range(dist0.shape[0]):
+    D0[i] = data0[np.argmin(dist0[i])]
+    D1[i] = data1[np.argmin(dist1[i])]
+dist0 = distance.cdist(D0,data0)
+dist1 = distance.cdist(D1, data1)
+for i in range(dist0.shape[0]):
+    print('i: ',i," d0_min: ",np.min(dist0[i])," d1_min: ",np.min(dist1[i]))
+
 D0p = D0
 D1p = D1
+
 D0 = np.mat(D0)
 D1 = np.mat(D1)
 n = 10
@@ -647,7 +664,7 @@ model.estimate(src, dst)
 
 # robustly estimate affine transform model with RANSAC
 model_robust, inliers = ransac(
-    (src, dst), AffineTransform, min_samples=3, residual_threshold=2, max_trials=1000
+    (src, dst), AffineTransform, min_samples=3, residual_threshold=3, max_trials=1000
 )
 outliers = inliers == False
 
@@ -731,4 +748,60 @@ ax.set_ylabel('Y Label')
 ax.set_zlabel('Z Label')
 ax.set_aspect('equal')
 
+#Split the data into x, y, and z arrays
+data_all = data0
+data1m = np.mat(data1)
+n = data1.shape[0]
+data1mt0 = (Rc0*data1m.T) + np.tile(tc0, (1, n))
+data1mt0 = data1mt0.T
+data1t0 = np.asarray(data1mt0)
+data_all = np.vstack((data_all,data1t0))
+xf0 = data_all[::10, 0]
+yf0 = data_all[::10, 1]
+zf0 = data_all[::10, 2]
+data_all = data0
+data1mt1 = (Rc*data1m.T) + np.tile(tc, (1, n))
+data1mt1 = data1mt1.T
+data1t1 = np.asarray(data1mt1)
+data_all = np.vstack((data_all,data1t1))
+xf1 = data_all[::10, 0]
+yf1 = data_all[::10, 1]
+zf1 = data_all[::10, 2]
+
+#Create a 3D figure
+fig = plt.figure(5)
+ax = fig.add_subplot(111, projection='3d')
+
+# Plot the point cloud data
+
+# ax.scatter(xd0, yd0, zd0, s=10.0, alpha=1.0,color="orange")
+# ax.scatter(xd1, yd1, zd1, s=10.0, alpha=1.0,color="red")
+ax.scatter(xf0, yf0, zf0, s=1, alpha=0.05, color="red")
+
+# Set the axis labels
+ax.set_xlabel('X Label')
+ax.set_ylabel('Y Label')
+ax.set_zlabel('Z Label')
+ax.set_aspect('equal')
+
+#Create a 3D figure
+fig = plt.figure(6)
+ax = fig.add_subplot(111, projection='3d')
+
+# Plot the point cloud data
+
+# ax.scatter(xd0, yd0, zd0, s=10.0, alpha=1.0,color="orange")
+# ax.scatter(xd1, yd1, zd1, s=10.0, alpha=1.0,color="red")
+ax.scatter(xf1, yf1, zf1, s=1, alpha=0.05, color='red')
+
+# Set the axis labels
+ax.set_xlabel('X Label')
+ax.set_ylabel('Y Label')
+ax.set_zlabel('Z Label')
+ax.set_aspect('equal')
+
 plt.show()
+dist0 = distance.cdist(D0p,data0)
+dist1 = distance.cdist(D1p, data1)
+for i in range(dist0.shape[0]):
+    print('i: ',i," d0_min: ",np.min(dist0[i])," d1_min: ",np.min(dist1[i]))
