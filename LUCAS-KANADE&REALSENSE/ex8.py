@@ -175,7 +175,7 @@ ply_path = '/media/matheusfdario/HD/REALSENSE/test/data/EXTRACTED DATA/PLY/ply_1
 
 # variables
 
-frame_num = 4
+frame_num = 20
 figure_num = 0
 
 D0 = np.zeros([1, 3])
@@ -190,7 +190,7 @@ data_list = []
 # Setup:/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240426_143549.bag
 pipe = rs.pipeline()
 cfg = rs.config()
-cfg.enable_device_from_file("/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240314_143232.bag")
+cfg.enable_device_from_file("/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240507_173341.bag")
 profile = pipe.start(cfg)
 
 # Parameters for ShiTomasi corner detection
