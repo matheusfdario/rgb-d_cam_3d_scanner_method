@@ -175,7 +175,7 @@ ply_path = '/media/matheusfdario/HD/REALSENSE/test/data/EXTRACTED DATA/PLY/ply_1
 
 # variables
 
-frame_num = 20
+frame_num = 50
 figure_num = 0
 
 D0 = np.zeros([1, 3])
@@ -187,22 +187,40 @@ list_d = [[], []]
 
 data_list = []
 
+bag_file = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240516_142546.bag"
+
 # Setup:/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240426_143549.bag
+# Set the playback so it's not done in real-time: https://github.com/IntelRealSense/librealsense/issues/3682#issuecomment-642344385
+
 pipe = rs.pipeline()
-cfg = rs.config()
-cfg.enable_device_from_file("/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240507_173341.bag")
-profile = pipe.start(cfg)
+config = rs.config()
+config.enable_device_from_file(bag_file, repeat_playback=False)
+profile = pipe.start(config)
+
+#Needed so frames don't get dropped during processing:
+profile.get_device().as_playback().set_real_time(False)
+
 
 # Parameters for ShiTomasi corner detection
 feature_params = dict(maxCorners=10,
-                      qualityLevel=0.5,
-                      minDistance=80,
-                      blockSize=10)
+                      qualityLevel=0.3,
+                      minDistance=7,
+                      blockSize=7)
 
 # Parameters for Lucas-Kanade optical flow
 lk_params = dict(winSize=(20, 20),
                  maxLevel=3,
                  criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
+
+# # params for ShiTomasi corner detection
+# feature_params = dict( maxCorners = 5,
+#                        qualityLevel = 0.3,
+#                        minDistance = 7,
+#                        blockSize = 7 )
+# # Parameters for lucas kanade optical flow
+# lk_params = dict( winSize  = (15, 15),
+#                   maxLevel = 2,
+#                   criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
 
 # Skip 5 first frames to give the Auto-Exposure time to adjust
 # for x in range(5):
@@ -305,7 +323,7 @@ for fi in range(frame_num):
         mask = np.zeros_like(old_gray,dtype=np.uint8)
         print(np.shape(mask))
         # Get the coordinates and dimensions of the detect_box
-        lim_perc = 0.1
+        lim_perc = 0.25
         x = round(width * lim_perc)
         y = round(height * lim_perc)
         w = width - 2*x
@@ -353,11 +371,11 @@ for fi in range(frame_num):
         # for j, cord in enumerate(good_new):
         #     print('c2',cord)
         #     plt.scatter(cord[0], cord[1], s=10, c='blue', marker='o')
-        plt.imshow(color)
+        plt.imshow(aligned_color)
         good_features = p0[:, 0]
         plt.scatter(good_features[:, 0], good_features[:, 1], color='blue')
         figure_num += 1
-        color_old = color
+        color_old = aligned_color
         # dist0 = distance.cdist(D0, data_old)
     else:
         # save pointcloud
@@ -551,6 +569,8 @@ for fi in range(frame_num):
     ax.set_zlabel('Z Label')
     ax.set_aspect('equal')
     ax.set_title('Merged Pointcloud %i' % fi)
+
+    color_old = aligned_color
 
 # Cleanup:
 
