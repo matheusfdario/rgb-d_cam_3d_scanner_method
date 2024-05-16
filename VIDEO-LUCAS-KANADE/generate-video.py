@@ -11,6 +11,7 @@ video_name = '/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/VID
 
 cir_size = 3
 lines = True
+fps = 10.0
 
 # Parameters for ShiTomasi corner detection
 feature_params = dict(maxCorners=10,
@@ -55,7 +56,7 @@ while True:
             # video
             height, width, layers = old_frame.shape
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            video = cv2.VideoWriter(video_name, fourcc, 10.0, (width, height))
+            video = cv2.VideoWriter(video_name, fourcc, fps, (width, height))
 
 
             #width = old_frame.shape[1]
