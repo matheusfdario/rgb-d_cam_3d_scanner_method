@@ -64,11 +64,15 @@ while True:
             mask = np.zeros_like(old_gray, dtype=np.uint8)
             mask0 = np.zeros_like(old_frame)
             # Get the coordinates and dimensions of the detect_box
-            lim_perc = 0.25
-            x = round(width * lim_perc)
-            y = round(height * lim_perc)
-            w = width - 2 * x
-            h = height - 2 * y
+            # lim_perc = 0.25
+            # x = round(width * lim_perc)
+            # y = round(height * lim_perc)
+            # w = width - 2 * x
+            # h = height - 2 * y
+            x = int(width*0.5)
+            y = int(height*0.75)
+            w = int(width*0.75)
+            h = height
             # Set the selected rectangle within the mask to white
             mask[y:y + h, x:x + w] = 255
 
@@ -87,9 +91,9 @@ while True:
                 good_new = p1[st == 1]
                 good_old = p0[st == 1]
             detect_corners = False
-            for p in good_new:
-                if (mask[int(p[1]), int(p[0])] == 0):
-                    detect_corners = True
+            # for p in good_new:
+            #     if (mask[int(p[1]), int(p[0])] == 0):
+            #         detect_corners = True
             mask0 = np.zeros_like(new_frame)
             if(detect_corners):
                 p0 = cv2.goodFeaturesToTrack(frame_gray, mask=mask, **feature_params)
