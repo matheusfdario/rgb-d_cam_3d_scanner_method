@@ -5,7 +5,8 @@ import os
 
 # path
 bag_file = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240516_142546.bag"
-video_name = '/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/VID/video.mp4'
+#bag_file = '/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240524_164615.bag'
+video_name = '/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/VID/video-x.mp4'
 
 # var
 
