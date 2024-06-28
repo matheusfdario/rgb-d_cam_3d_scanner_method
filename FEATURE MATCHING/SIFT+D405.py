@@ -355,6 +355,8 @@ while(play_playback):
                     #data_str_T = data_str
                     data_merged = np.vstack((data_merged, data_end_T))
                     P0 = P0_next
+                    data0 = data1
+
 
         else:
             if(frame_number==0):
