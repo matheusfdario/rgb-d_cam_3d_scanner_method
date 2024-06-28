@@ -10,7 +10,7 @@ MIN_MATCH_COUNT = 10
 #img2 = cv.imread("/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/IMG-PIPE/png_Color_1710437557587.33837890625000.png", cv.IMREAD_GRAYSCALE)
 
 img1 = cv.imread('/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/IMG/1.png', cv.IMREAD_GRAYSCALE)  # queryImage
-img2 = cv.imread('/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/IMG/250.png', cv.IMREAD_GRAYSCALE)  # trainImage
+img2 = cv.imread('/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/IMG/200.png', cv.IMREAD_GRAYSCALE)  # trainImage
 
 
 # Initiate SIFT detector
