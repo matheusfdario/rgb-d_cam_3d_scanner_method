@@ -596,18 +596,37 @@ img_end = color_frame_npy
 # ax.set_title('Poincloud After TRANS')
 #
 # plt.show()
+#frame_number2 = 0
 
-xm = data_merged[::1000, 0]
-ym = data_merged[::1000, 1]
-zm = data_merged[::1000, 2]
+pc=data_merged
+
 
 
 # Create a 3D figure
-fig = plt.figure(0)
+fig = plt.figure(fig_number)
+fig_number += 1
 ax = fig.add_subplot(111, projection='3d')
 
+# Set the axis labels
+ax.set_xlabel('X Label')
+ax.set_ylabel('Y Label')
+ax.set_zlabel('Z Label')
+ax.set_aspect('equal')
+ax.set_title('Pointclouds')
+
+x = pc[::100,0]
+y = pc[::100,1]
+z = pc[::100,2]
+
 #Plot the point cloud data
-ax.scatter(xm,ym,zm,s=10.0,color='red')
+ax.scatter(x,y,z,s=1.0,color="blue",alpha=0.2)
+
+f_num = 1
+
+
+# Create a 3D figure
+fig = plt.figure(fig_number)
+ax = fig.add_subplot(111, projection='3d')
 
 # Set the axis labels
 ax.set_xlabel('X Label')
@@ -688,15 +707,15 @@ for i,pc in enumerate(pointclouds_M):
 # src_pts_mask = src_pts[matchesMask_np==1]
 # dst_pts_mask = dst_pts[matchesMask_np==1]
 # valid_matches = np.stack((src_pts_mask[:,0],dst_pts_mask[:,0]),axis=0)
-plt.figure(1)
-dist_np = np.asarray(dist_list)
-plt.plot(range(len(dist_np)),dist_np)
-plt.figure(2)
-disp_np = np.asarray(disp_list)
-plt.plot(range(len(disp_np)),disp_np)
-plt.figure(3)
-num_matches_np = np.asarray(num_matches_list)
-plt.plot(range(len(num_matches_np)),num_matches_np)
+# plt.figure(1)
+# dist_np = np.asarray(dist_list)
+# plt.plot(range(len(dist_np)),dist_np)
+# plt.figure(2)
+# disp_np = np.asarray(disp_list)
+# plt.plot(range(len(disp_np)),disp_np)
+# plt.figure(3)
+# num_matches_np = np.asarray(num_matches_list)
+# plt.plot(range(len(num_matches_np)),num_matches_np)
 plt.show()
 # plt.figure(9)
 # vec = reject_outliers(np.diag(distance.cdist(valid_matches[0], valid_matches[1])))
