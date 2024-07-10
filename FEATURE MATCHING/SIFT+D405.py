@@ -216,8 +216,11 @@ def euclidean_transform_3D(A, B):
 dist_list = []
 disp_list = []
 num_matches_list = []
-sel_frames = [0] #for generalization
+pointclouds = []
+pointclouds_T = []
 
+sel_frames = [0] #for generalization
+fig_number = 0
 while(play_playback):
     pipe = rs.pipeline()
     config = rs.config()
