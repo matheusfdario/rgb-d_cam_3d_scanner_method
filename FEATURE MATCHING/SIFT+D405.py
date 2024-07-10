@@ -614,7 +614,38 @@ ax.set_xlabel('X Label')
 ax.set_ylabel('Y Label')
 ax.set_zlabel('Z Label')
 ax.set_aspect('equal')
-ax.set_title('Poincloud After TRANS')
+ax.set_title('Pointclouds')
+
+colors = ['red','blue','green','yellow','m','y']
+for i,pc in enumerate(pointclouds_M):
+
+    x = pc[::100,0]
+    y = pc[::100,1]
+    z = pc[::100,2]
+
+    #Plot the point cloud data
+    ax.scatter(x,y,z,s=1.0,color=colors[i],alpha=0.75)
+#
+# # Create a 3D figure
+# fig = plt.figure(1)
+# ax = fig.add_subplot(111, projection='3d')
+#
+# # Set the axis labels
+# ax.set_xlabel('X Label')
+# ax.set_ylabel('Y Label')
+# ax.set_zlabel('Z Label')
+# ax.set_aspect('equal')
+# ax.set_title('Pointcloud 0 and 1')
+#
+# colors = ['b','g','r','c','m','y']
+# for i,pc in enumerate(pointclouds[0:2]):
+#
+#     x = pc[::10,0]
+#     y = pc[::10,1]
+#     z = pc[::10,2]
+#
+#     #Plot the point cloud data
+#     ax.scatter(x,y,z,s=1.0,color=colors[i],alpha=0.2)
 
 # img1 = cv.cvtColor(img_str, cv.COLOR_BGR2GRAY)
 # img2 = cv.cvtColor(img_end, cv.COLOR_BGR2GRAY)
