@@ -74,10 +74,14 @@ def feature_matching(image1,image2,fn):
         dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
         M, mask = cv.findHomography(src_pts, dst_pts, cv.RANSAC, 5.0)               #find Homography just to use RANSAC isn't optimazed, but it`s implemented!
         matchesMask = mask.ravel().tolist()
-        #h, w = img1.shape
-        #pts = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]]).reshape(-1, 1, 2)
-        #dst = cv.perspectiveTransform(pts, M)
-        #img2 = cv.polylines(img2, [np.int32(dst)], True, 200, 3, cv.LINE_AA)
+        h, w = img1.shape
+        pts = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]]).reshape(-1, 1, 2)
+        dst = cv.perspectiveTransform(pts, M)
+        pts_cent = centeroidnp(pts)
+        dst_cent = centeroidnp(dst)
+        dist_var = np.linalg.norm(dst_cent - pts_cent)
+
+        img2 = cv.polylines(img2, [np.int32(dst)], True, 200, 3, cv.LINE_AA)
     else:
         print("Not enough matches are found - {}/{}".format(len(good), MIN_MATCH_COUNT))
         matchesMask = None
