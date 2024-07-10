@@ -292,7 +292,7 @@ while(play_playback):
 
             # 3D filter for pointcloud
 
-            radius = 0.2
+            radius = 0.5
 
             pointcloud_X = point_cloud_in_numpy[:,0]
             pointcloud_Y = point_cloud_in_numpy[:,1]
