@@ -125,7 +125,7 @@ def feature_matching(image1,image2,fn):
     dst_pts_mask = dst_pts[matchesMask_np==1]
     num_mat =len(src_pts_mask)
     valid_matches = np.stack((src_pts_mask[:, 0], dst_pts_mask[:, 0]), axis=0)
-    dist_var = np.mean(reject_outliers(np.diag(distance.cdist(valid_matches[0], valid_matches[1]))))
+    #dist_var = np.mean(reject_outliers(np.diag(distance.cdist(valid_matches[0], valid_matches[1]))))
     disp_var = variation(np.diag(distance.cdist(valid_matches[0], valid_matches[1])))
     return valid_matches,dist_var,disp_var, num_mat
 
