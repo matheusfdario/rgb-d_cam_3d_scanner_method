@@ -306,6 +306,8 @@ while(play_playback):
                 data_str = data
                 data0 = data
                 data_merged = data_str
+                pointclouds.append(data_str)
+                pointclouds_T.append(data_str)
                 img_str = color_frame_npy
                 print('depro0')
                 matches_pair = matches_list[0]
