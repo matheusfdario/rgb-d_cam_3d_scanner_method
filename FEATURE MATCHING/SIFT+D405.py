@@ -85,12 +85,12 @@ def feature_matching(image1,image2,fn):
     else:
         print("Not enough matches are found - {}/{}".format(len(good), MIN_MATCH_COUNT))
         matchesMask = None
-    #draw_params = dict(matchColor = (0,255,0), # draw matches in green color
-    #singlePointColor = None,
-    #matchesMask = matchesMask, # draw only inliers
-    #flags = 2)
-    #plt.figure(7)
-    #img3 = cv.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
+    draw_params = dict(matchColor = (0,255,0), # draw matches in green color
+    singlePointColor = None,
+    matchesMask = matchesMask, # draw only inliers
+    flags = 2)
+    #plt.figure(fn)
+    img3 = cv.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
     #plt.imshow(img3, 'gray'),plt.show()
     matchesMask_np = np.asarray(matchesMask)
     src_pts_mask = src_pts[matchesMask_np==1]
