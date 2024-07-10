@@ -417,16 +417,27 @@ while(play_playback):
                 img_last = color_frame_npy
             else:
                 img_now = color_frame_npy
-                matches, dist, disp, num_matches = feature_matching(img_last,img_now)
-                if(dist>dist_min):
-                    if(disp<var_max):
-                        sel_frames.append(frame_number)
-                        matches_list.append(matches)
-                        img_last = color_frame_npy
-                dist_list.append(dist)
-                disp_list.append(disp)
-                num_matches_list.append(num_matches)
-
+                matches, dist, disp, num_matches = feature_matching(img_last,img_now,fig_number)
+                #fig_number += 1
+                # if(dist>dist_min):
+                #     if(disp<var_max):
+                #         sel_frames.append(frame_number)
+                #         matches_list.append(matches)
+                #         img_last = color_frame_npy
+                if (dist > dist_min):
+                    sel_frames.append(last_frame_number)
+                    matches_list.append(last_matches)
+                    img_last = last_color_frame_npy
+                    dist_list.append(last_dist)
+                    disp_list.append(last_disp)
+                    num_matches_list.append(last_num_matches)
+                else:
+                    last_matches = matches
+                    last_frame_number = frame_number
+                    last_dist = dist
+                    last_disp = disp
+                    last_num_matches = num_matches
+                    last_color_frame_npy = color_frame_npy
         frame_number += 1  # get number of frames
         playback.resume()
 
