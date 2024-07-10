@@ -43,7 +43,14 @@ def reject_outliers(data, m = 125.):
     s = d/mdev if mdev else np.zeros(len(d))
     return data[s<m]
 
-def feature_matching(image1,image2):
+def centeroidnp(arr):
+    arr = arr.reshape(4, 2)
+    length = arr.shape[0]
+    sum_x = np.sum(arr[:, 0])
+    sum_y = np.sum(arr[:, 1])
+    centroid = np.asarray([sum_x / length, sum_y / length])
+    return centroid
+def feature_matching(image1,image2,fn):
     img1 = cv.cvtColor(image1, cv.COLOR_BGR2GRAY)
     img2 = cv.cvtColor(image2, cv.COLOR_BGR2GRAY)
 
