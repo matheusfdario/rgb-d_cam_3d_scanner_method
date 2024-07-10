@@ -393,20 +393,32 @@ while(play_playback):
                         # brute force correction of deprojection error
                         P0_next = brute_force_pointcloud_correction(P0_next, data)
 
-
-                    A = np.mat(P1)
-                    B = np.mat(P0)
+                    P0,P1 = filter_invalid_3D_points(P0,P1,0.01)
+                    A = np.mat(P0)
+                    B = np.mat(P1)
                     n = A.shape[0]
                     # recover the transformation
                     Rc, tc = euclidean_transform_3D(A, B)
-                    A = np.mat(data1)
-                    B = np.mat(data0)
+                    A = np.mat(data_merged)
+                    B = np.mat(data1)
                     n = A.shape[0]
                     A_transformed = (Rc * A.T) + np.tile(tc, (1, n))
                     A_transformed = A_transformed.T
-                    data_end_T = A_transformed
+                    data_merged = A_transformed
+                    pointclouds_M = []
+                    for p in pointclouds_T:
+                        A = np.mat(p)
+                        n = A.shape[0]
+                        A_transformed = (Rc * A.T) + np.tile(tc, (1, n))
+                        A_transformed = A_transformed.T
+                        pc1 = np.array(A_transformed)
+                        pointclouds_M.append(A_transformed)
+                    pointclouds_T = pointclouds_M
                     #data_str_T = data_str
-                    data_merged = np.vstack((data_merged, data_end_T))
+                    data_merged = np.array(data_merged)
+                    data_merged = np.vstack((data_merged, data1))
+                    pointclouds_T.append(data1)
+                    pointclouds.append(data_merged)
                     P0 = P0_next
                     data0 = data1
 
