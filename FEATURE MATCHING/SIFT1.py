@@ -12,7 +12,13 @@ MIN_MATCH_COUNT = 10
 img1 = cv.imread('/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/IMG/1.png', cv.IMREAD_GRAYSCALE)  # queryImage
 img2 = cv.imread('/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/IMG/200.png', cv.IMREAD_GRAYSCALE)  # trainImage
 
-
+def centeroidnp(arr):
+    arr = arr.reshape(4, 2)
+    length = arr.shape[0]
+    sum_x = np.sum(arr[:, 0])
+    sum_y = np.sum(arr[:, 1])
+    centroid = np.asarray([sum_x / length, sum_y / length])
+    return centroid
 # Initiate SIFT detector
 sift = cv.SIFT_create()
 # find the keypoints and descriptors with SIFT
