@@ -339,7 +339,7 @@ while(play_playback):
 
             else:
                 if frame_number in sel_frames:
-                    print('marge ',frame_number)
+                    print('merge ',frame_number)
                     data_end = data
                     data1 = data
                     # deprojection in the actual frame
