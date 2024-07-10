@@ -22,7 +22,7 @@ get_depth = False
 first_frame = True
 play_playback = True
 var_max = 0.15
-dist_min = 10
+dist_min = 25
 
 D0 = np.zeros([1, 3])
 D1 = np.zeros([1, 3])
