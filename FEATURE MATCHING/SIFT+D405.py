@@ -158,6 +158,15 @@ def pointset_deprojection(pixels,depth_frama,depth_intrin):
             except:
                 print(i, a, b, 'OUT0')
     return D
+def filter_invalid_3D_points(pointset0,pointset1,threshold):
+    distance0 = np.linalg.norm(pointset0, axis=1)
+    distance1 = np.linalg.norm(pointset1, axis=1)
+    mask = np.ones_like(distance0)
+    mask = np.where(distance0>threshold, mask,0)
+    mask = np.where(distance1>threshold, mask,0)
+    pointset0_filtered = pointset0[mask>0]
+    pointset1_filtered = pointset1[mask>0]
+    return pointset0_filtered,pointset1_filtered
 def euclidean_transform_3D(A, B):
     '''
             A,B - Nx3 matrix
