@@ -1,7 +1,7 @@
 from matplotlib import pyplot as plt
 import numpy as np  # fundamental package for scientific computing
-filepath = '/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/MERGED/out.npy'
-merged_pointcloud =  np.load(filepath)
+filepath = '/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/FEATURE MATCHING/merged_pointclouds.npy'
+merged_pointcloud = np.load(filepath)
 # plot transformed merged pointcloud
 x = merged_pointcloud[::1000, 0]
 y = merged_pointcloud[::1000, 1]
