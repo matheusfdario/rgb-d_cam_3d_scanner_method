@@ -5,6 +5,7 @@ import matplotlib.cm
 # Loading and visualizing a PLY point cloud
 print("Loading a PLY point cloud, printing, and rendering...")
 file_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/MERGED/data.ply"
+out_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/MESH/mesh.obj"
 pcd = o3d.io.read_point_cloud(file_path)
 # Printing point cloud information and points array
 print(pcd)
@@ -21,7 +22,7 @@ print(np.asarray(pcd.points))
 #o3d.visualization.draw_geometries([pcd])
 print("Downsampling the point cloud with a voxel size of 0.001")
 # Applying voxel downsampling
-downpcd = pcd.voxel_down_sample(voxel_size=0.0001)
+downpcd = pcd.voxel_down_sample(voxel_size=0.0005)
 # # Setting visualization parameters for the downsampled point cloud
 # downsample_view_params = {
 #     "zoom": 0.3412,
@@ -94,5 +95,5 @@ color = (np.array([[129],[81],[56]]))/255
 mesh.paint_uniform_color(color)
 
 o3d.visualization.draw_geometries([mesh],mesh_show_back_face=True)
-
+o3d.io.write_triangle_mesh(out_path, mesh, compressed=True, print_progress=True)
 
