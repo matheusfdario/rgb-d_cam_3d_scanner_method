@@ -10,7 +10,7 @@ import datetime,os
 from matplotlib import pyplot as plt
 from matplotlib.pyplot import cm
 # path
-bag_file = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240507_170957.bag"
+bag_file = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240726_190520.bag"
 video_name = '/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/VID/video-t1.mp4'
 pc_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/" + datetime.datetime.now().strftime('%d-%m-%Y_%H-%M-%S')
 os.makedirs(pc_path)
