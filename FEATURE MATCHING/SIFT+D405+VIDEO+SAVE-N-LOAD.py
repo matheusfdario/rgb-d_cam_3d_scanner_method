@@ -15,7 +15,7 @@ video_name = '/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/VID
 pc_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/" + datetime.datetime.now().strftime('%d-%m-%Y_%H-%M-%S')
 os.makedirs(pc_path)
 # var
-MAX_MATCH_COUNT = 400
+MAX_MATCH_COUNT = 500
 MIN_MATCH_COUNT = 10
 cir_size = 3
 lines = True
@@ -310,7 +310,7 @@ while(play_playback):
             if(frame_number==0):
                 data_str = data
                 data0 = data
-                data_merged = data_str
+                #data_merged = data_str
                 np.save(path_save,data_str)
                 #pointclouds.append(data_str)
                 #pointclouds_T.append(data_str)
@@ -405,12 +405,12 @@ while(play_playback):
                     n = A.shape[0]
                     # recover the transformation
                     Rc, tc = euclidean_transform_3D(A, B)
-                    A = np.mat(data_merged)
-                    B = np.mat(data1)
-                    n = A.shape[0]
-                    A_transformed = (Rc * A.T) + np.tile(tc, (1, n))
-                    A_transformed = A_transformed.T
-                    data_merged = A_transformed
+                    # A = np.mat(data_merged)
+                    # B = np.mat(data1)
+                    # n = A.shape[0]
+                    # A_transformed = (Rc * A.T) + np.tile(tc, (1, n))
+                    # A_transformed = A_transformed.T
+                    # data_merged = A_transformed
                     pc_list = sorted(os.listdir(pc_path))
                     for npc in pc_list:
                         load_path = pc_path + "/" + npc
@@ -431,8 +431,8 @@ while(play_playback):
                     #     pointclouds_M.append(A_transformed)
                     # #pointclouds_T = pointclouds_M
                     #data_str_T = data_str
-                    data_merged = np.array(data_merged)
-                    data_merged = np.vstack((data_merged, data1))
+                    #data_merged = np.array(data_merged)
+                    #data_merged = np.vstack((data_merged, data1))
                     np.save(path_save, data1)
                     #pointclouds_T.append(data1)
                     #pointclouds.append(data_merged)
@@ -686,28 +686,28 @@ img_end = color_frame_npy
 # plt.show()
 #frame_number2 = 0
 
-pc=data_merged
-
-
-
-# Create a 3D figure
-fig = plt.figure(fig_number)
-fig_number += 1
-ax = fig.add_subplot(111, projection='3d')
-
-# Set the axis labels
-ax.set_xlabel('X Label')
-ax.set_ylabel('Y Label')
-ax.set_zlabel('Z Label')
-ax.set_aspect('equal')
-ax.set_title('Pointclouds')
-
-x = pc[::100,0]
-y = pc[::100,1]
-z = pc[::100,2]
-
-#Plot the point cloud data
-ax.scatter(x,y,z,s=1.0,color="blue",alpha=0.2)
+# pc=data_merged
+#
+#
+#
+# # Create a 3D figure
+# fig = plt.figure(fig_number)
+# fig_number += 1
+# ax = fig.add_subplot(111, projection='3d')
+#
+# # Set the axis labels
+# ax.set_xlabel('X Label')
+# ax.set_ylabel('Y Label')
+# ax.set_zlabel('Z Label')
+# ax.set_aspect('equal')
+# ax.set_title('Pointclouds')
+#
+# x = pc[::100,0]
+# y = pc[::100,1]
+# z = pc[::100,2]
+#
+# #Plot the point cloud data
+# ax.scatter(x,y,z,s=1.0,color="blue",alpha=0.2)
 
 f_num = 1
 
