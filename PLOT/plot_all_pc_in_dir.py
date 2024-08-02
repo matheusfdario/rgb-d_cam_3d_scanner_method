@@ -33,4 +33,4 @@ for i,npc in enumerate(pc_list):
 
     #Plot the point cloud data
     ax.scatter(x,y,z,s=1.0,color=colors[i],alpha=0.75)
-    np.save(load_path,pc)
+    #np.save(load_path,pc)
