@@ -5,7 +5,9 @@ from matplotlib import pyplot as plt
 from matplotlib.pyplot import cm
 
 #var
-dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/19-07-2024_14-44-02"
+#dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/19-07-2024_14-44-02"
+#dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/12-08-2024_18-16-36"
+dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/16-08-2024_21-57-55/test"
 pc_list = sorted(os.listdir(dir_path))
 
 
@@ -24,6 +26,7 @@ ax.set_title('Pointclouds')
 
 colors = cm.rainbow(np.linspace(0, 1, len(pc_list)))
 for i,npc in enumerate(pc_list):
+
     load_path = dir_path + "/" + npc
     print(load_path)
     pc = np.load(load_path)
