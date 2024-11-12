@@ -877,3 +877,23 @@ for i, npc in enumerate(pc_list):
         pc1 = np.array(A_transformed)
         load_path = pc_path + "/" + npc
         np.save(load_path, pc1)
+
+f_num = 2
+fig = plt.figure(f_num)
+ax = fig.add_subplot(111, projection='3d')
+# Set the axis labels
+ax.set_xlabel('X Label')
+ax.set_ylabel('Y Label')
+ax.set_zlabel('Z Label')
+ax.set_aspect('equal')
+ax.set_title('Pointclouds 2')
+colors = cm.rainbow(np.linspace(0, 1, len(pc_list)))
+for i,npc in enumerate(pc_list):
+    load_path = pc_path + "/" + npc
+    print(load_path)
+    pc = np.load(load_path)
+    x = pc[::1000,0]
+    y = pc[::1000,1]
+    z = pc[::1000,2]
+    #Plot the point cloud data
+    ax.scatter(x,y,z,s=1.0,color=colors[i],alpha=0.75)
