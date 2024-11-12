@@ -772,7 +772,7 @@ ax.set_xlabel('X Label')
 ax.set_ylabel('Y Label')
 ax.set_zlabel('Z Label')
 ax.set_aspect('equal')
-ax.set_title('Pointclouds')
+ax.set_title('Pointclouds 2')
 
 colors = cm.rainbow(np.linspace(0, 1, len(pc_list)))
 for i,npc in enumerate(pc_list):
