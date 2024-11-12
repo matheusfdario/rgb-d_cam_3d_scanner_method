@@ -19,7 +19,7 @@ video_name = '/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/VID
 pc_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/" + timestamp
 os.makedirs(pc_path)
 # var
-MAX_MATCH_COUNT = 500
+MAX_MATCH_COUNT = 75
 MIN_MATCH_COUNT = 10
 cir_size = 3
 lines = True
