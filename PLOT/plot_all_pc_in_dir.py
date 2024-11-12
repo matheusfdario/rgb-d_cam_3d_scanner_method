@@ -7,12 +7,13 @@ from matplotlib.pyplot import cm
 #var
 #dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/19-07-2024_14-44-02"
 #dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/12-08-2024_18-16-36"
-dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/16-08-2024_21-57-55/test"
+#dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/20-08-2024_10-54-02"
+dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/07-11-2024_21-25-44"
 pc_list = sorted(os.listdir(dir_path))
 
 
 # Create a 3D figure
-fig = plt.figure(0)
+fig = plt.figure(1)
 ax = fig.add_subplot(111, projection='3d')
 
 # Set the axis labels
