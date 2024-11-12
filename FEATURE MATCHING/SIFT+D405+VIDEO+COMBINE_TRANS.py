@@ -863,16 +863,17 @@ plt.show()
 # vec = reject_outliers(np.diag(distance.cdist(valid_matches[0], valid_matches[1])))
 # plt.hist(vec)
 Rlen = len(R_list)
+pc_list = sorted(os.listdir(pc_path))
 #TODO: Fix this
-# for i, npc in enumerate(pc_list):
-#     print(i)
-#     load_path = pc_path + "/" + npc
-#     p = np.load(load_path)
-#     A = np.mat(p)
-#     n = A.shape[0]
-#     if (i < Rlen):
-#         A_transformed = (R_list[i] * A.T) + np.tile(t_list[i], (1, n))
-#         A_transformed = A_transformed.T
-#         pc1 = np.array(A_transformed)
-#         load_path = pc_path + "/test/" + npc
-#         np.save(load_path, pc1)
+for i, npc in enumerate(pc_list):
+    print(i)
+    load_path = pc_path + "/" + npc
+    p = np.load(load_path)
+    A = np.mat(p)
+    n = A.shape[0]
+    if (i < Rlen):
+        A_transformed = (R_list[i] * A.T) + np.tile(t_list[i], (1, n))
+        A_transformed = A_transformed.T
+        pc1 = np.array(A_transformed)
+        load_path = pc_path + "/" + npc
+        np.save(load_path, pc1)
