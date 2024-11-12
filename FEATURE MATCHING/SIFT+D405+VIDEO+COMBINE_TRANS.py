@@ -27,6 +27,7 @@ fps = 10.0
 get_depth = False
 first_frame = True
 play_playback = True
+pair_zero_flag = True
 var_max = 0.15
 dist_min = 25
 dist_var = 0
