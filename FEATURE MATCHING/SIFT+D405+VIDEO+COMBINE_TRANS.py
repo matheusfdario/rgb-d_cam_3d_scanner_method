@@ -567,6 +567,9 @@ while(play_playback):
                         dist_list.append(dist)
                         disp_list.append(disp)
                         img_last = color_frame_npy
+                        img1 = img2
+                        kp1=kp2
+                        des1=des2
                 else:
                     print("Not enough matches are found - {}/{}".format(len(good), MIN_MATCH_COUNT))
                     matchesMask = None
