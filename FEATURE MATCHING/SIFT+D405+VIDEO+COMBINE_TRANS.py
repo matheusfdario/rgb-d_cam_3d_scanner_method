@@ -10,11 +10,13 @@ import datetime,os
 from matplotlib import pyplot as plt
 from matplotlib.pyplot import cm
 # path
+#bag_file = "/home/matheusfdario/Documentos/PC-BAG/20240726_190520.bag"
 #bag_file = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240726_190520.bag"            #real big
-#bag_file = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240507_170957.bag"             #real small
-bag_file = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240516_142546 (cópia).bag"    #test
-video_name = '/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/VID/video-t1.mp4'
-pc_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/" + datetime.datetime.now().strftime('%d-%m-%Y_%H-%M-%S')
+bag_file = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240507_170957.bag"             #real small
+#bag_file = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240516_142546 (cópia).bag"    #test
+timestamp = datetime.datetime.now().strftime('%d-%m-%Y_%H-%M-%S')
+video_name = '/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/VID/video-'+ timestamp + '.mp4'
+pc_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/" + timestamp
 os.makedirs(pc_path)
 # var
 MAX_MATCH_COUNT = 500
