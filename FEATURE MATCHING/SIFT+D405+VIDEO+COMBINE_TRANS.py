@@ -864,7 +864,7 @@ plt.show()
 # plt.hist(vec)
 Rlen = len(R_list)
 pc_list = sorted(os.listdir(pc_path))
-#TODO: Fix this
+
 for i, npc in enumerate(pc_list):
     print(i)
     load_path = pc_path + "/" + npc
