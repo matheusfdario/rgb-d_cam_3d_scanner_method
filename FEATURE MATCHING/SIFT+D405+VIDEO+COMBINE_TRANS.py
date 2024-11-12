@@ -487,16 +487,22 @@ while(play_playback):
                 img_last = color_frame_npy
             else:
                 img_now = color_frame_npy
-                image1 = img_last
-                image2 = img_now
-                img1 = cv.cvtColor(image1, cv.COLOR_BGR2GRAY)
-                img2 = cv.cvtColor(image2, cv.COLOR_BGR2GRAY)
+                if(pair_zero_flag):
+                    pair_zero_flag = False
+                    image1 = img_last
+                    image2 = img_now
+                    img1 = cv.cvtColor(image1, cv.COLOR_BGR2GRAY)
+                    img2 = cv.cvtColor(image2, cv.COLOR_BGR2GRAY)
 
-                # Initiate SIFT detector
-                sift = cv.SIFT_create()
-                # find the keypoints and descriptors with SIFT
-                kp1, des1 = sift.detectAndCompute(img1, None)
-                kp2, des2 = sift.detectAndCompute(img2, None)
+                    # Initiate SIFT detector
+                    sift = cv.SIFT_create()
+                    # find the keypoints and descriptors with SIFT
+                    kp1, des1 = sift.detectAndCompute(img1, None)
+                    kp2, des2 = sift.detectAndCompute(img2, None)
+                else:
+                    image2 = img_now
+                    img2 = cv.cvtColor(image2, cv.COLOR_BGR2GRAY)
+                    kp2, des2 = sift.detectAndCompute(img2, None)
                 FLANN_INDEX_KDTREE = 1
                 index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
                 search_params = dict(checks=50)
