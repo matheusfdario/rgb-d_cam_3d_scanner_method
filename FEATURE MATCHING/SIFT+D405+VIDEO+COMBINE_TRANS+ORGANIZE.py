@@ -37,6 +37,8 @@ os.makedirs(img_path)
 # var
 MAX_MATCH_COUNT = 100
 MIN_MATCH_COUNT = 10
+MIN_DIST = 10 #PIXELS
+cir_size = 3
 cir_size = 3
 lines = True
 fps = 10.0
@@ -325,7 +327,7 @@ while(play_playback):
 
                 # 3D filter for pointcloud
 
-            radius = 0.5
+                radius = 0.15
 
                 pointcloud_X = point_cloud_in_numpy[:,0]
                 pointcloud_Y = point_cloud_in_numpy[:,1]
