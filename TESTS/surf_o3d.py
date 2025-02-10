@@ -98,5 +98,5 @@ color = (np.array([[129],[81],[56]]))/255
 mesh.paint_uniform_color(color)
 
 o3d.visualization.draw_geometries([mesh],mesh_show_back_face=True)
-#o3d.io.write_triangle_mesh(out_path, mesh, compressed=True, print_progress=True)
+o3d.io.write_triangle_mesh(out_path, mesh, compressed=True, print_progress=True)
 
