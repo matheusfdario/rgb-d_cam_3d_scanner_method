@@ -275,10 +275,6 @@ while(play_playback):
     disp = 3
     combined_frames = 0
     while True:
-        if(get_depth):
-            print(frame_number)
-        else:
-            print(frame_number,dist)
         try:
             # Store next frameset for later processing:
             frameset = pipe.wait_for_frames()
@@ -289,92 +285,91 @@ while(play_playback):
             else:
                 get_depth = True
             break
-        color_frame = frameset.get_color_frame()
-        depth_frame = frameset.get_depth_frame()
-        color = np.asanyarray(color_frame.get_data())
-        colorizer = rs.colorizer()
-        colorized_depth = np.asanyarray(colorizer.colorize(depth_frame).get_data())
-
-        # Create alignment primitive with color as its target stream:
-        align = rs.align(rs.stream.color)
-        frameset = align.process(frameset)
-
-        depth_sensor = profile.get_device().first_depth_sensor()
-        depth_scale = depth_sensor.get_depth_scale()
-
-        # Update color and depth frames:
-        aligned_depth_frame = frameset.get_depth_frame()
-        aligned_color_frame = frameset.get_color_frame()
-        depth_intrin = depth_frame.profile.as_video_stream_profile().intrinsics
-        color_intrin = color_frame.profile.as_video_stream_profile().intrinsics
-        aligned_color = np.asanyarray(aligned_color_frame.get_data())
-        colorized_depth = np.asanyarray(colorizer.colorize(aligned_depth_frame).get_data())
-        color_frame_npy = aligned_color
-
         if(get_depth):
-            # get pointcloud with get_vertices
-            pc = rs.pointcloud()
-            pc.map_to(aligned_color_frame)
-            points = pc.calculate(aligned_depth_frame)
-            vtx = np.asanyarray(points.get_vertices())
-            tex = np.asanyarray(points.get_texture_coordinates())
+            print(frame_number)
+            if frame_number in sel_frames:
+                color_frame = frameset.get_color_frame()
+                depth_frame = frameset.get_depth_frame()
+                color = np.asanyarray(color_frame.get_data())
+                colorizer = rs.colorizer()
+                colorized_depth = np.asanyarray(colorizer.colorize(depth_frame).get_data())
 
-            vtx_list = vtx.tolist()
-            #data_list.append(vtx_list)
-            point_cloud_in_numpy = np.asarray(vtx_list)
+                # Create alignment primitive with color as its target stream:
+                align = rs.align(rs.stream.color)
+                frameset = align.process(frameset)
 
-            point_cloud_valid_only = np.zeros_like(point_cloud_in_numpy)
+                depth_sensor = profile.get_device().first_depth_sensor()
+                depth_scale = depth_sensor.get_depth_scale()
 
-            # 3D filter for pointcloud
+                # Update color and depth frames:
+                aligned_depth_frame = frameset.get_depth_frame()
+                aligned_color_frame = frameset.get_color_frame()
+                depth_intrin = depth_frame.profile.as_video_stream_profile().intrinsics
+                color_intrin = color_frame.profile.as_video_stream_profile().intrinsics
+                aligned_color = np.asanyarray(aligned_color_frame.get_data())
+                colorized_depth = np.asanyarray(colorizer.colorize(aligned_depth_frame).get_data())
+                color_frame_npy = aligned_color
+
+                # get pointcloud with get_vertices
+                pc = rs.pointcloud()
+                pc.map_to(aligned_color_frame)
+                points = pc.calculate(aligned_depth_frame)
+                vtx = np.asanyarray(points.get_vertices())
+                tex = np.asanyarray(points.get_texture_coordinates())
+
+                vtx_list = vtx.tolist()
+                #data_list.append(vtx_list)
+                point_cloud_in_numpy = np.asarray(vtx_list)
+
+                point_cloud_valid_only = np.zeros_like(point_cloud_in_numpy)
+
+                # 3D filter for pointcloud
 
             radius = 0.5
 
-            pointcloud_X = point_cloud_in_numpy[:,0]
-            pointcloud_Y = point_cloud_in_numpy[:,1]
-            pointcloud_Z = point_cloud_in_numpy[:,2]
-            pointcloud_mask = 2*(pointcloud_X**2) + 2*(pointcloud_Y**2) + 2*(pointcloud_Z**2) <= 3*(radius**2)
+                pointcloud_X = point_cloud_in_numpy[:,0]
+                pointcloud_Y = point_cloud_in_numpy[:,1]
+                pointcloud_Z = point_cloud_in_numpy[:,2]
+                pointcloud_mask = 2*(pointcloud_X**2) + 2*(pointcloud_Y**2) + 2*(pointcloud_Z**2) <= 3*(radius**2)
 
-            data = point_cloud_in_numpy[pointcloud_mask]
-            path_save = pc_path + "/{:04d}.npy".format(frame_number)
-            print('a')
-            if(frame_number==0):
-                data_str = data
-                data0 = data
-                #data_merged = data_str
-                np.save(path_save,data_str)
-                #pointclouds.append(data_str)
-                #pointclouds_T.append(data_str)
-                img_str = color_frame_npy
-                print('depro0')
-                matches_pair = matches_list[0]
-                points0 = matches_pair[0]
-                for i, pix_old in enumerate(points0):
-                    a, b = pix_old.ravel()
-                    a = round(a)
-                    b = round(b)
-                    print(a,b)
-                    deprojection_check = True
-                    while (deprojection_check):
-                        try:
-                            depth = depth_frame.get_distance(a, b)
-                            depth_point = rs.rs2_deproject_pixel_to_point(depth_intrin, [a, b], depth)
-                            # list_d[fi].append(depth_point)
-                            d_points = np.asarray(depth_point)
-                            if (i == 0):
-                                P0 = d_points
-                            else:
-                                P0 = np.vstack((P0, d_points))
-                            print(i, a, b, depth_point)
-                            deprojection_check = False
-                        except:
-                            print(i, a, b, 'OUT0')
-                print('init', P0)
+                data = point_cloud_in_numpy[pointcloud_mask]
+                path_save = pc_path + "/{:04d}.npy".format(frame_number)
 
-                # brute force correction of deprojection error
-                P0 = brute_force_pointcloud_correction(P0,data)
 
-            else:
-                if frame_number in sel_frames:
+                print('a')
+                if(frame_number==0):
+                    data_str = data
+                    data0 = data
+                    np.save(path_save,data_str)
+                    img_str = color_frame_npy
+                    print('depro0')
+                    matches_pair = matches_list[0]
+                    points0 = matches_pair[0]
+                    for i, pix_old in enumerate(points0):
+                        a, b = pix_old.ravel()
+                        a = round(a)
+                        b = round(b)
+                        print(a,b)
+                        deprojection_check = True
+                        while (deprojection_check):
+                            try:
+                                depth = depth_frame.get_distance(a, b)
+                                depth_point = rs.rs2_deproject_pixel_to_point(depth_intrin, [a, b], depth)
+                                d_points = np.asarray(depth_point)
+                                if (i == 0):
+                                    P0 = d_points
+                                else:
+                                    P0 = np.vstack((P0, d_points))
+                                print(i, a, b, depth_point)
+                                deprojection_check = False
+                            except:
+                                print(i, a, b, 'OUT0')
+                    print('init', P0)
+
+                    # brute force correction of deprojection error
+                    P0 = brute_force_pointcloud_correction(P0,data)
+
+                else:
                     print('merge ',frame_number)
                     data_end = data
                     data1 = data
@@ -428,81 +423,33 @@ while(play_playback):
                                 print(i, c, d, 'OUT1')
                         # brute force correction of deprojection error
                         P0_next = brute_force_pointcloud_correction(P0_next, data)
-
-                    P0,P1 = filter_invalid_3D_points(P0,P1,0.01)
-
-
-                    A = np.mat(P0)
-                    B = np.mat(P1)
-                    n = A.shape[0]
-                    # if(trans_number>0):
-                    #     B = (Rcl * B.T) + np.tile(tcl, (1, n))
-                    #     B = B.T
-                    # recover the transformation
-                    #Rc, tc = euclidean_transform_3D(A, B)
-                    Rc, tc = euclidean_transform_3D(A, B)
-                    # A = np.mat(data_merged)
-                    # B = np.mat(data1)
-                    # n = A.shape[0]
-                    # A_transformed = (Rc * A.T) + np.tile(tc, (1, n))
-                    # A_transformed = A_transformed.T
-                    # data_merged = A_transformed
-                    if(trans_number==0):
-                        R_list.append(Rc)
-                        t_list.append(tc)
-                        trans_number+=1
-                    else:
-                        for i, (Ri, ti) in enumerate(zip(R_list, t_list)):
-                            #print(f'Índice: {i}, Elemento da lista 1: {item1}, Elemento da lista 2: {item2}')
-
-                            # Combine as rotações
-                            R_combined = np.dot(Rc, Ri)
-
-                            # Combine as translações
-                            t_combined = np.dot(Rc, ti) + tc
-
-                            R_list[i] = R_combined
-                            t_list[i] = t_combined
-                            trans_number += 1
-                        R_list.append(Rc)
-                        t_list.append(tc)
-                    # pc_list = sorted(os.listdir(pc_path))
-                    # for npc in pc_list:
-                    #     load_path = pc_path + "/" + npc
-                    #     p = np.load(load_path)
-                    #     A = np.mat(p)
-                    #     n = A.shape[0]
-                    #     A_transformed = (Rc * A.T) + np.tile(tc, (1, n))
-                    #     A_transformed = A_transformed.T
-                    #     pc1 = np.array(A_transformed)
-                    #     np.save(load_path,pc1)
-
-                    # pointclouds_M = []
-                    # for p in pointclouds_T:
-                    #     A = np.mat(p)
-                    #     n = A.shape[0]
-                    #     A_transformed = (Rc * A.T) + np.tile(tc, (1, n))
-                    #     A_transformed = A_transformed.T
-                    #     pc1 = np.array(A_transformed)
-                    #     pointclouds_M.append(A_transformed)
-                    # #pointclouds_T = pointclouds_M
-                    #data_str_T = data_str
-                    #data_merged = np.array(data_merged)
-                    #data_merged = np.vstack((data_merged, data1))
-
-                    # A = np.mat(data1)
-                    # n = A.shape[0]
-                    # A_transformed = (Rc * A.T) + np.tile(tc, (1, n))
-                    # A_transformed = A_transformed.T
-                    pc1 = np.array(data1)
-                    np.save(path_save, pc1)
-                    #pointclouds_T.append(data1)
-                    #pointclouds.append(data_merged)
-
-                    P0 = P0_next
-                    # data0 = data1
-
-
+                        P0,P1 = filter_invalid_3D_points(P0,P1,0.01)
+                        A = np.mat(P0)
+                        B = np.mat(P1)
+                        n = A.shape[0]
+                        # recover the transformation
+                        Rc, tc = euclidean_transform_3D(A, B)
+                        if(trans_number==0):
+                            R_list.append(Rc)
+                            t_list.append(tc)
+                            trans_number+=1
+                        else:
+                            for i, (Ri, ti) in enumerate(zip(R_list, t_list)):
+                                #print(f'Índice: {i}, Elemento da lista 1: {item1}, Elemento da lista 2: {item2}')
+                                # Combine as rotações
+                                R_combined = np.dot(Rc, Ri)
+                                # Combine as translações
+                                t_combined = np.dot(Rc, ti) + tc
+                                R_list[i] = R_combined
+                                t_list[i] = t_combined
+                                trans_number += 1
+                            R_list.append(Rc)
+                            t_list.append(tc)
+                        pc1 = np.array(data1)
+                        np.save(path_save, pc1)
+                        P0 = P0_next
+            else:
+                print("pass")
         else:
             if(frame_number==0):
                 matches_list = []
