@@ -87,7 +87,7 @@ o3d.visualization.draw_geometries([density_mesh])
 
 
 print('remove low density vertices')
-vertices_to_remove = densities < np.quantile(densities, 0.05)
+vertices_to_remove = densities < np.quantile(densities, 0.01)
 mesh.remove_vertices_by_mask(vertices_to_remove)
 print(mesh)
 # Calculate the normals of the vertex
