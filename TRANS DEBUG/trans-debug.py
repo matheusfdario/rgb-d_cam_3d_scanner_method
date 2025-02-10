@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # path
-bag_file = "/DATA/20240516_142546.bag"
+bag_file = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240516_142546 (cópia).bag"
 video_name = '/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/VID/video-t.mp4'
 
 # var
