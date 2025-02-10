@@ -592,7 +592,8 @@ pc_list = pc_list[:-1]
 print("1 ",pc_list)
 plot3D(0,pc_path)
 Rlen = len(R_list)
-pc_list = sorted(os.listdir(pc_path))
+trans_path = pc_path + "/TRANS"
+os.makedirs(img_path)
 
 for i, npc in enumerate(pc_list):
     print(i)
