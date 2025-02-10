@@ -8,9 +8,25 @@ import datetime,os
 from matplotlib import pyplot as plt
 from matplotlib.pyplot import cm
 # path
+#bag_file = "/home/matheusfdario/Documentos/PC-BAG/CIR/20240426_145334.bag" # inner pipe
 #bag_file = "/home/matheusfdario/Documentos/PC-BAG/20240726_190520.bag"
+#bag_file = "/home/matheusfdario/Documentos/PC-BAG/20241114_163807.bag"
+#bag_file = "/home/matheusfdario/Documentos/PC-BAG/20241119_102249.bag" # dani pipe ok
+bag_file = "/home/matheusfdario/Documentos/PC-BAG/20241119_135757.bag" # spool slice a ok
+#bag_file = "/home/matheusfdario/Documentos/PC-BAG/20241119_162210.bag" # spool slice b (black)
+#bag_file = "/home/matheusfdario/Documentos/PC-BAG/" #tati pipe
+#bag_file = "/home/matheusfdario/Documentos/PC-BAG/20241205_180427.bag" #hex tube 1
+#bag_file = "/home/matheusfdario/Documentos/PC-BAG/20241210_144344.bag" #hex tube 2
+#bag_file = "/home/matheusfdario/Documentos/PC-BAG/20241216_180242.bag"
+#bag_file = "/home/matheusfdario/Documentos/PC-BAG/20241211_150942.bag" # pato 1
+#bag_file = "/home/matheusfdario/Documentos/PC-BAG/20241216_180242.bag" # meias cana
+#bag_file = "/home/matheusfdario/Documentos/PC-BAG/20241217_114828.bag" #test spray 3d + gis
+#bag_file = "/home/matheusfdario/Documentos/PC-BAG/20241217_151702.bag" # test shampoo seco
+#bag_file = "/home/matheusfdario/Documentos/PC-BAG/20250129_190853.bag" # test hex 3
+
+#bag_file = "/home/matheusfdario/Documentos/PC-BAG/20241113_143343.bag" #real ok 5 fps
 #bag_file = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240726_190520.bag"            #real big
-bag_file = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240507_170957.bag"             #real small
+#bag_file = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240507_170957.bag"             #real small
 #bag_file = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240516_142546 (cópia).bag"    #test
 timestamp = datetime.datetime.now().strftime('%d-%m-%Y_%H-%M-%S')
 video_name = '/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/VID/video-'+ timestamp + '.mp4'
