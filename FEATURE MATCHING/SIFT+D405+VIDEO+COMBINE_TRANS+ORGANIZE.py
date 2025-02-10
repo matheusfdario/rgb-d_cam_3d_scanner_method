@@ -32,6 +32,8 @@ timestamp = datetime.datetime.now().strftime('%d-%m-%Y_%H-%M-%S')
 video_name = '/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/VID/video-'+ timestamp + '.mp4'
 pc_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/" + timestamp
 os.makedirs(pc_path)
+img_path = pc_path + "/IMG"
+os.makedirs(img_path)
 # var
 MAX_MATCH_COUNT = 75
 MIN_MATCH_COUNT = 10
@@ -529,16 +531,25 @@ while(play_playback):
                         fourcc = cv.VideoWriter_fourcc(*'mp4v')
                         video = cv.VideoWriter(video_name, fourcc, fps, (width, height))
                     if(num_matches<MAX_MATCH_COUNT):
-                        video.write(img3)
-                        sel_frames.append(frame_number)
-                        matches_list.append(matches)
-                        num_matches_list.append(num_matches)
-                        dist_list.append(dist)
-                        disp_list.append(disp)
-                        img_last = color_frame_npy
-                        img1 = img2
-                        kp1=kp2
-                        des1=des2
+                        if(dist>MIN_DIST):
+                            video.write(img3)
+                            path_save_img = img_path + "/{:04d}".format(frame_number)
+                            #imgkp1 = cv.drawKeypoints(img1, kp1, image1)
+                            #imgkp2 = cv.drawKeypoints(img2, kp2, image2)
+                            cv.imwrite(path_save_img + "-1a.jpg", image1)
+                            cv.imwrite(path_save_img + "-2a.jpg", image2)
+                            cv.imwrite(path_save_img + "-1b.jpg", img1)
+                            cv.imwrite(path_save_img + "-2b.jpg", img2)
+                            cv.imwrite(path_save_img + "-3.jpg",img3)
+                            sel_frames.append(frame_number)
+                            matches_list.append(matches)
+                            num_matches_list.append(num_matches)
+                            dist_list.append(dist)
+                            disp_list.append(disp)
+                            img_last = color_frame_npy
+                            #img1 = img_next
+                            #kp1= kp_next
+                            #des1= des_next
                 else:
                     print("Not enough matches are found - {}/{}".format(len(good), MIN_MATCH_COUNT))
                     matchesMask = None
