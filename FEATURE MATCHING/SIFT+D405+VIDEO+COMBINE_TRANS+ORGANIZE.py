@@ -453,27 +453,62 @@ while(play_playback):
             else:
                 print("pass")
         else:
+            print(frame_number, dist)
+            color_frame = frameset.get_color_frame()
+            depth_frame = frameset.get_depth_frame()
+            color = np.asanyarray(color_frame.get_data())
+            colorizer = rs.colorizer()
+            colorized_depth = np.asanyarray(colorizer.colorize(depth_frame).get_data())
+
+            # Create alignment primitive with color as its target stream:
+            align = rs.align(rs.stream.color)
+            frameset = align.process(frameset)
+
+            depth_sensor = profile.get_device().first_depth_sensor()
+            depth_scale = depth_sensor.get_depth_scale()
+
+            # Update color and depth frames:
+            aligned_depth_frame = frameset.get_depth_frame()
+            aligned_color_frame = frameset.get_color_frame()
+            depth_intrin = depth_frame.profile.as_video_stream_profile().intrinsics
+            color_intrin = color_frame.profile.as_video_stream_profile().intrinsics
+            aligned_color = np.asanyarray(aligned_color_frame.get_data())
+            colorized_depth = np.asanyarray(colorizer.colorize(aligned_depth_frame).get_data())
+            color_frame_npy = aligned_color
             if(frame_number==0):
                 matches_list = []
                 img_last = color_frame_npy
             else:
                 img_now = color_frame_npy
-                if(pair_zero_flag):
-                    pair_zero_flag = False
-                    image1 = img_last
-                    image2 = img_now
-                    img1 = cv.cvtColor(image1, cv.COLOR_BGR2GRAY)
-                    img2 = cv.cvtColor(image2, cv.COLOR_BGR2GRAY)
+                # if(pair_zero_flag):
+                #     pair_zero_flag = False
+                #     image1 = img_last
+                #     image2 = img_now
+                #     img1 = cv.cvtColor(image1, cv.COLOR_BGR2GRAY)
+                #     img2 = cv.cvtColor(image2, cv.COLOR_BGR2GRAY)
+                #     # Initiate SIFT detector
+                #     sift = cv.SIFT_create()
+                #     # find the keypoints and descriptors with SIFT
+                #     kp1, des1 = sift.detectAndCompute(img1, None)
+                #     kp2, des2 = sift.detectAndCompute(img2, None)
+                # else:
+                #     image2 = img_now
+                #     img2 = cv.cvtColor(image2, cv.COLOR_BGR2GRAY)
+                #     kp2, des2 = sift.detectAndCompute(img2, None)
+                #     img_next = img2
 
-                    # Initiate SIFT detector
-                    sift = cv.SIFT_create()
-                    # find the keypoints and descriptors with SIFT
-                    kp1, des1 = sift.detectAndCompute(img1, None)
-                    kp2, des2 = sift.detectAndCompute(img2, None)
-                else:
-                    image2 = img_now
-                    img2 = cv.cvtColor(image2, cv.COLOR_BGR2GRAY)
-                    kp2, des2 = sift.detectAndCompute(img2, None)
+                image1 = img_last
+                image2 = img_now
+                img1 = cv.cvtColor(image1, cv.COLOR_BGR2GRAY)
+                img2 = cv.cvtColor(image2, cv.COLOR_BGR2GRAY)
+                # Initiate SIFT detector
+                sift = cv.SIFT_create()
+                # find the keypoints and descriptors with SIFT
+                kp1, des1 = sift.detectAndCompute(img1, None)
+                kp2, des2 = sift.detectAndCompute(img2, None)
+                #img_next = img2
+                #des_next = des2
+                #kp_next = kp2
                 FLANN_INDEX_KDTREE = 1
                 index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
                 search_params = dict(checks=50)
