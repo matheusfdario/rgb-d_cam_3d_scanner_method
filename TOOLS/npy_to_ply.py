@@ -53,6 +53,6 @@ if(buffer_size>0):
 # Pass numpy array to Open3D.o3d.geometry.PointCloud and visualize
 pcd = o3d.geometry.PointCloud()
 pcd.points = o3d.utility.Vector3dVector(xyz)
-o3d.io.write_point_cloud("/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/MERGED/data.ply", pcd)
+o3d.io.write_point_cloud("/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/MERGED/hex-03.ply", pcd)
 
 o3d.visualization.draw_geometries([pcd])
