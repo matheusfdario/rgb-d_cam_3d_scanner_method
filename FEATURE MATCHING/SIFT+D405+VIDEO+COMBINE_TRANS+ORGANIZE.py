@@ -522,8 +522,7 @@ while(play_playback):
                 if len(good) > MIN_MATCH_COUNT:
                     src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
                     dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
-                    M, mask = cv.findHomography(src_pts, dst_pts, cv.RANSAC,
-                                                5.0)  # find Homography just to use RANSAC isn't optimazed, but it`s implemented!
+                    M, mask = cv.findHomography(src_pts, dst_pts, cv.RANSAC,5.0)  # find Homography just to use RANSAC isn't optimazed, but it`s implemented!
                     matchesMask = mask.ravel().tolist()
                     h, w = img1.shape
                     pts = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]]).reshape(-1, 1, 2)
