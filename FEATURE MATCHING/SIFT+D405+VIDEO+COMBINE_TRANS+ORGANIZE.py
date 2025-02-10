@@ -5,8 +5,6 @@ import matplotlib.pyplot as plt
 from scipy.spatial import distance
 from scipy.stats import variation
 import datetime,os
-
-
 from matplotlib import pyplot as plt
 from matplotlib.pyplot import cm
 # path
@@ -31,54 +29,20 @@ pair_zero_flag = True
 var_max = 0.15
 dist_min = 25
 dist_var = 0
-
 D0 = np.zeros([1, 3])
 D1 = np.zeros([1, 3])
 D2 = np.zeros([1, 3])
 D3 = np.zeros([1, 3])
-
 square_corners_str = np.array([[461.8,361.8],[576.4,359.3],[464.4,433.1],[588.5,432.9]])
 square_corners_end = np.array([[454.1,77.0],[578.3,62.9],[458.0,151.3],[582.8,141.7]])
-
 rec_corners_str = np.array([[160.7,369.7],[698.0,354.1],[142.2,433.8],[721.4,431.2]])
 rec_corners_end = np.array([[129.8,114.8],[711.7,50.7],[138.6,179.0],[716.1,128.9]])
-
 # func
-
-# ==============================================================================
-#                                                                     VIZ_MAYAVI
-# ==============================================================================
-# def viz_mayavi(points, vals="distance"):
-#     x = points[:, 0]  # x position of point
-#     y = points[:, 1]  # y position of point
-#     z = points[:, 2]  # z position of point
-#     # r = lidar[:, 3]  # reflectance value of point
-#     d = np.sqrt(x ** 2 + y ** 2)  # Map Distance from sensor
-#
-#     # Plot using mayavi -Much faster and smoother than matplotlib
-#     import mayavi.mlab
-#
-#     if vals == "height":
-#         col = z
-#     else:
-#         col = d
-#
-#     fig = mayavi.mlab.figure(bgcolor=(0, 0, 0), size=(640, 360))
-#     mayavi.mlab.points3d(x, y, z,
-#                          col,          # Values used for Color
-#                          mode="point",
-#                          colormap='spectral', # 'bone', 'copper', 'gnuplot'
-#                          # color=(0, 1, 0),   # Used a fixed (r,g,b) instead
-#                          figure=fig,
-#                          )
-#     mayavi.mlab.show()
-
 def reject_outliers(data, m = 125.):
     d = np.abs(data - np.median(data))
     mdev = np.median(d)
     s = d/mdev if mdev else np.zeros(len(d))
     return data[s<m]
-
 def centeroidnp(arr):
     arr = arr.reshape(4, 2)
     length = arr.shape[0]
@@ -89,7 +53,6 @@ def centeroidnp(arr):
 def feature_matching(image1,image2,fn):
     img1 = cv.cvtColor(image1, cv.COLOR_BGR2GRAY)
     img2 = cv.cvtColor(image2, cv.COLOR_BGR2GRAY)
-
     # Initiate SIFT detector
     sift = cv.SIFT_create()
     # find the keypoints and descriptors with SIFT
@@ -136,13 +99,11 @@ def feature_matching(image1,image2,fn):
     #dist_var = np.mean(reject_outliers(np.diag(distance.cdist(valid_matches[0], valid_matches[1]))))
     disp_var = variation(np.diag(distance.cdist(valid_matches[0], valid_matches[1])))
     return valid_matches,dist_var,disp_var, num_mat
-
 # brute force correction of deprojection error
 def brute_force_pointcloud_correction(pointset,pointcloud):
     dist = distance.cdist(pointset, pointcloud)
     pointset_corrected = pointcloud[dist.argmin(axis=1)]
     return pointset_corrected
-
 # deprojection of a seto os points
 def pointset_deprojection(pixels,depth_frama,depth_intrin):
     for i, pixel in enumerate(square_corners_str):
@@ -220,7 +181,6 @@ def euclidean_transform_3D(A, B):
 
 # Setup:/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240426_143549.bag
 # Set the playback so it's not done in real-time: https://github.com/IntelRealSense/librealsense/issues/3682#issuecomment-642344385
-
 dist_list = []
 disp_list = []
 num_matches_list = []
@@ -547,13 +507,6 @@ while(play_playback):
                     dist = dist_var
                     disp = disp_var
                     num_matches = num_mat
-                    # matches, dist, disp, num_matches = feature_matching(img_last,img_now,fig_number)
-                    # fig_number += 1
-                    # if(dist>dist_min):
-                    #     if(disp<var_max):
-                    #         sel_frames.append(frame_number)
-                    #         matches_list.append(matches)
-                    #         img_last = color_frame_npy
                     if (frame_number == 1):
                         # video
                         height, width, layers = img3.shape
@@ -576,191 +529,12 @@ while(play_playback):
                     frame_error.append(frame_number)
         frame_number += 1  # get number of frames
         playback.resume()
-
     # Cleanup:
     cv.destroyAllWindows()
     video.release()
     pipe.stop()
     print("Video Genereted")
 img_end = color_frame_npy
-
-# plt.figure(0)
-# plt.imshow(img_str)
-# plt.scatter(square_corners_str[:,0],square_corners_str[:,1],color='blue')
-# plt.scatter(rec_corners_str[:,0],rec_corners_str[:,1],color='purple')
-# plt.figure(1)
-# plt.imshow(img_end)
-# plt.scatter(square_corners_end[:,0],square_corners_end[:,1],color='red')
-# plt.scatter(rec_corners_end[:,0],rec_corners_end[:,1],color='orange')
-#
-# x0 = D0[:,0]
-# y0 = D0[:,1]
-# z0 = D0[:,2]
-#
-# x1 = D1[:,0]
-# y1 = D1[:,1]
-# z1 = D1[:,2]
-#
-# x2 = D2[:,0]
-# y2 = D2[:,1]
-# z2 = D2[:,2]
-#
-# x3 = D3[:,0]
-# y3 = D3[:,1]
-# z3 = D3[:,2]
-#
-#
-# # Create a 3D figure
-# fig = plt.figure(3)
-# ax = fig.add_subplot(111, projection='3d')
-#
-# #Plot the point cloud data
-# ax.scatter(x0,y0,z0,s=10.0,color='red')
-# ax.scatter(x1,y1,z1,s=10.0,color='blue')
-# ax.scatter(x2,y2,z2,s=10.0,color='purple')
-# ax.scatter(x3,y3,z3,s=10.0,color='orange')
-#
-# # Set the axis labels
-# ax.set_xlabel('X Label')
-# ax.set_ylabel('Y Label')
-# ax.set_zlabel('Z Label')
-# ax.set_aspect('equal')
-# ax.set_title('Before TRANS')
-#
-# xs = data_str[::1000, 0]
-# ys = data_str[::1000, 1]
-# zs = data_str[::1000, 2]
-#
-# xe = data_end[::1000, 0]
-# ye = data_end[::1000, 1]
-# ze = data_end[::1000, 2]
-#
-# # Create a 3D figure
-# fig = plt.figure(4)
-# ax = fig.add_subplot(111, projection='3d')
-#
-# #Plot the point cloud data
-# ax.scatter(xs,ys,zs,s=10.0,color='red')
-# ax.scatter(xe,ye,ze,s=10.0,color='blue')
-#
-# # Set the axis labels
-# ax.set_xlabel('X Label')
-# ax.set_ylabel('Y Label')
-# ax.set_zlabel('Z Label')
-# ax.set_aspect('equal')
-# ax.set_title('Pointcloud Before TRANS')
-#
-# A = np.mat(D1)
-# B = np.mat(D0)
-# n = A.shape[0]
-# # recover the transformation
-# Rc, tc = euclidean_transform_3D(A, B)
-#
-# A_transformed = (Rc*A.T) + np.tile(tc, (1, n))
-# A_transformed = A_transformed.T
-# D1T = A_transformed
-# D0T = D0
-#
-# A = np.mat(D3)
-# B = np.mat(D2)
-# n = A.shape[0]
-# A_transformed = (Rc*A.T) + np.tile(tc, (1, n))
-# A_transformed = A_transformed.T
-# D3T = A_transformed
-# D2T = D2
-#
-# x0 = D0T[:,0]
-# y0 = D0T[:,1]
-# z0 = D0T[:,2]
-#
-# x1 = D1T[:,0]
-# y1 = D1T[:,1]
-# z1 = D1T[:,2]
-#
-# x2 = D2T[:,0]
-# y2 = D2T[:,1]
-# z2 = D2T[:,2]
-#
-# x3 = D3T[:,0]
-# y3 = D3T[:,1]
-# z3 = D3T[:,2]
-#
-#
-# # Create a 3D figure
-# fig = plt.figure(5)
-# ax = fig.add_subplot(111, projection='3d')
-#
-# #Plot the point cloud data
-# ax.scatter(x0,y0,z0,s=10.0,color='red')
-# ax.scatter(x1,y1,z1,s=10.0,color='blue')
-# ax.scatter(x2,y2,z2,s=10.0,color='purple')
-# ax.scatter(x3,y3,z3,s=10.0,color='orange')
-# # Set the axis labels
-# ax.set_xlabel('X Label')
-# ax.set_ylabel('Y Label')
-# ax.set_zlabel('Z Label')
-# ax.set_aspect('equal')
-# ax.set_title('After TRANS')
-#
-# A = np.mat(data_end)
-# B = np.mat(data_str)
-# n = A.shape[0]
-# A_transformed = (Rc*A.T) + np.tile(tc, (1, n))
-# A_transformed = A_transformed.T
-# data_end_T = A_transformed
-# data_str_T = data_str
-#
-# xst = data_str_T[::1000, 0]
-# yst = data_str_T[::1000, 1]
-# zst = data_str_T[::1000, 2]
-#
-# xet = data_end_T[::1000, 0]
-# yet = data_end_T[::1000, 1]
-# zet = data_end_T[::1000, 2]
-#
-# # Create a 3D figure
-# fig = plt.figure(6)
-# ax = fig.add_subplot(111, projection='3d')
-#
-# #Plot the point cloud data
-# ax.scatter(xst,yst,zst,s=10.0,color='red')
-# ax.scatter(xet,yet,zet,s=10.0,color='blue')
-#
-# # Set the axis labels
-# ax.set_xlabel('X Label')
-# ax.set_ylabel('Y Label')
-# ax.set_zlabel('Z Label')
-# ax.set_aspect('equal')
-# ax.set_title('Poincloud After TRANS')
-#
-# plt.show()
-#frame_number2 = 0
-
-# pc=data_merged
-#
-#
-#
-# # Create a 3D figure
-# fig = plt.figure(fig_number)
-# fig_number += 1
-# ax = fig.add_subplot(111, projection='3d')
-#
-# # Set the axis labels
-# ax.set_xlabel('X Label')
-# ax.set_ylabel('Y Label')
-# ax.set_zlabel('Z Label')
-# ax.set_aspect('equal')
-# ax.set_title('Pointclouds')
-#
-# x = pc[::100,0]
-# y = pc[::100,1]
-# z = pc[::100,2]
-#
-# #Plot the point cloud data
-# ax.scatter(x,y,z,s=1.0,color="blue",alpha=0.2)
-
-f_num = 1
-
 pc_list = sorted(os.listdir(pc_path))
 
 # Create a 3D figure
