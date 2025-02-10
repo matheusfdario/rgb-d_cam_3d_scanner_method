@@ -35,7 +35,7 @@ os.makedirs(pc_path)
 img_path = pc_path + "/IMG"
 os.makedirs(img_path)
 # var
-MAX_MATCH_COUNT = 75
+MAX_MATCH_COUNT = 100
 MIN_MATCH_COUNT = 10
 cir_size = 3
 lines = True
