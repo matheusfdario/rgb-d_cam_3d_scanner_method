@@ -530,9 +530,8 @@ while(play_playback):
                     pts_cent = centeroidnp(pts)
                     dst_cent = centeroidnp(dst)
                     dist_var = np.linalg.norm(dst_cent - pts_cent)
-
-                    img2 = cv.polylines(img2, [np.int32(dst)], True, 200, 3, cv.LINE_AA)
-
+                    img2_l = img2
+                    img2_l = cv.polylines(img2_l, [np.int32(dst)], True, 200, 3, cv.LINE_AA)
                     draw_params = dict(matchColor=(0, 255, 0),  # draw matches in green color
                                        singlePointColor=None,
                                        matchesMask=matchesMask,  # draw only inliers
