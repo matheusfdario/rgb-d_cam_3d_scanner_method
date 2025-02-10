@@ -27,11 +27,28 @@ for i,npc in enumerate(pc_list):
     #print(load_path)
     pc = np.load(load_path)
     if(i==0):
-        xyz = pc
+        xyz_buffer = pc
+        buffer_size +=1
+        #xyz = pc
     else:
-        xyz = np.vstack((xyz, pc))
-    np.save(load_path,pc)
-
+        print(i,buffer_size,i%buffer_max_size)
+        if(i%buffer_max_size==0):
+            buffer_size = 0
+            if(xyz_create_flag):
+                xyz = xyz_buffer
+                xyz_create_flag = False
+            else:
+                xyz = np.vstack((xyz, xyz_buffer))
+        else:
+            if(buffer_size==0):
+                xyz_buffer = pc
+            else:
+                xyz_buffer = np.vstack((xyz_buffer, pc))
+            buffer_size += 1
+        #xyz = np.vstack((xyz, pc))
+    #np.save(load_path,pc)
+if(buffer_size>0):
+    xyz = np.vstack((xyz, xyz_buffer))
 
 # Pass numpy array to Open3D.o3d.geometry.PointCloud and visualize
 pcd = o3d.geometry.PointCloud()
