@@ -536,9 +536,7 @@ while(play_playback):
                                        singlePointColor=None,
                                        matchesMask=matchesMask,  # draw only inliers
                                        flags=2)
-                    # plt.figure(fn)
-                    img3 = cv.drawMatches(img1, kp1, img2, kp2, good, None, **draw_params)
-                    # plt.imshow(img3, 'gray'),plt.show()
+                    img3 = cv.drawMatches(img1, kp1, img2_l, kp2, good, None, **draw_params)
                     matchesMask_np = np.asarray(matchesMask)
                     src_pts_mask = src_pts[matchesMask_np == 1]
                     dst_pts_mask = dst_pts[matchesMask_np == 1]
