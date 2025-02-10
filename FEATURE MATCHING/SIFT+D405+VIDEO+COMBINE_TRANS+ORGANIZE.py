@@ -587,106 +587,10 @@ while(play_playback):
     print("Video Genereted")
 img_end = color_frame_npy
 pc_list = sorted(os.listdir(pc_path))
-
-# Create a 3D figure
-fig = plt.figure(fig_number)
-ax = fig.add_subplot(111, projection='3d')
-
-# Set the axis labels
-ax.set_xlabel('X Label')
-ax.set_ylabel('Y Label')
-ax.set_zlabel('Z Label')
-ax.set_aspect('equal')
-ax.set_title('Pointclouds 2')
-
-colors = cm.rainbow(np.linspace(0, 1, len(pc_list)))
-for i,npc in enumerate(pc_list):
-    load_path = pc_path + "/" + npc
-    print(load_path)
-    pc = np.load(load_path)
-    x = pc[::1000,0]
-    y = pc[::1000,1]
-    z = pc[::1000,2]
-
-    #Plot the point cloud data
-    ax.scatter(x,y,z,s=1.0,color=colors[i],alpha=0.75)
-
-#
-# # Create a 3D figure
-# fig = plt.figure(1)
-# ax = fig.add_subplot(111, projection='3d')
-#
-# # Set the axis labels
-# ax.set_xlabel('X Label')
-# ax.set_ylabel('Y Label')
-# ax.set_zlabel('Z Label')
-# ax.set_aspect('equal')
-# ax.set_title('Pointcloud 0 and 1')
-#
-# colors = ['b','g','r','c','m','y']
-# for i,pc in enumerate(pointclouds[0:2]):
-#
-#     x = pc[::10,0]
-#     y = pc[::10,1]
-#     z = pc[::10,2]
-#
-#     #Plot the point cloud data
-#     ax.scatter(x,y,z,s=1.0,color=colors[i],alpha=0.2)
-
-# img1 = cv.cvtColor(img_str, cv.COLOR_BGR2GRAY)
-# img2 = cv.cvtColor(img_end, cv.COLOR_BGR2GRAY)
-#
-# # Initiate SIFT detector
-# sift = cv.SIFT_create()
-# # find the keypoints and descriptors with SIFT
-# kp1, des1 = sift.detectAndCompute(img1,None)
-# kp2, des2 = sift.detectAndCompute(img2,None)
-# FLANN_INDEX_KDTREE = 1
-# index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
-# search_params = dict(checks = 50)
-# flann = cv.FlannBasedMatcher(index_params, search_params)
-# matches = flann.knnMatch(des1,des2,k=2)
-# # store all the good matches as per Lowe's ratio test.
-# good = []
-# for m,n in matches:
-#     if m.distance < 0.7*n.distance:
-#         good.append(m)
-# if len(good) > MIN_MATCH_COUNT:
-#     src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
-#     dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
-#     M, mask = cv.findHomography(src_pts, dst_pts, cv.RANSAC, 5.0)
-#     matchesMask = mask.ravel().tolist()
-#     #h, w = img1.shape
-#     #pts = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]]).reshape(-1, 1, 2)
-#     #dst = cv.perspectiveTransform(pts, M)
-#     #img2 = cv.polylines(img2, [np.int32(dst)], True, 200, 3, cv.LINE_AA)
-# else:
-#     print("Not enough matches are found - {}/{}".format(len(good), MIN_MATCH_COUNT))
-#     matchesMask = None
-# #draw_params = dict(matchColor = (0,255,0), # draw matches in green color
-# #singlePointColor = None,
-# #matchesMask = matchesMask, # draw only inliers
-# #flags = 2)
-# #plt.figure(7)
-# #img3 = cv.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
-# #plt.imshow(img3, 'gray'),plt.show()
-# matchesMask_np = np.asarray(matchesMask)
-# src_pts_mask = src_pts[matchesMask_np==1]
-# dst_pts_mask = dst_pts[matchesMask_np==1]
-# valid_matches = np.stack((src_pts_mask[:,0],dst_pts_mask[:,0]),axis=0)
-# plt.figure(1)
-# dist_np = np.asarray(dist_list)
-# plt.plot(range(len(dist_np)),dist_np)
-# plt.figure(2)
-# disp_np = np.asarray(disp_list)
-# plt.plot(range(len(disp_np)),disp_np)
-# plt.figure(3)
-# num_matches_np = np.asarray(num_matches_list)
-# plt.plot(range(len(num_matches_np)),num_matches_np)
-plt.show()
-# plt.figure(9)
-# vec = reject_outliers(np.diag(distance.cdist(valid_matches[0], valid_matches[1])))
-# plt.hist(vec)
+print("0 ",pc_list)
+pc_list = pc_list[:-1]
+print("1 ",pc_list)
+plot3D(0,pc_path)
 Rlen = len(R_list)
 pc_list = sorted(os.listdir(pc_path))
 
@@ -702,23 +606,4 @@ for i, npc in enumerate(pc_list):
         pc1 = np.array(A_transformed)
         load_path = pc_path + "/" + npc
         np.save(load_path, pc1)
-
-f_num = 2
-fig = plt.figure(f_num)
-ax = fig.add_subplot(111, projection='3d')
-# Set the axis labels
-ax.set_xlabel('X Label')
-ax.set_ylabel('Y Label')
-ax.set_zlabel('Z Label')
-ax.set_aspect('equal')
-ax.set_title('Pointclouds 2')
-colors = cm.rainbow(np.linspace(0, 1, len(pc_list)))
-for i,npc in enumerate(pc_list):
-    load_path = pc_path + "/" + npc
-    print(load_path)
-    pc = np.load(load_path)
-    x = pc[::1000,0]
-    y = pc[::1000,1]
-    z = pc[::1000,2]
-    #Plot the point cloud data
-    ax.scatter(x,y,z,s=1.0,color=colors[i],alpha=0.75)
+plot3D(1,pc_path)
