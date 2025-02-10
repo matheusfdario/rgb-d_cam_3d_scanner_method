@@ -24,7 +24,7 @@ xyz_create_flag = True
 
 for i,npc in enumerate(pc_list):
     load_path = dir_path + "/" + npc
-    print(load_path)
+    #print(load_path)
     pc = np.load(load_path)
     if(i==0):
         xyz = pc
