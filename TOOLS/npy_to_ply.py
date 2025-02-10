@@ -18,7 +18,9 @@ import os
 #dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/17-12-2024_16-27-15" # teste shampoo seco
 dir_path =  "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/29-01-2025_19-13-47" # hex 3
 pc_list = sorted(os.listdir(dir_path))
-
+buffer_max_size = 40
+buffer_size = 0
+xyz_create_flag = True
 
 for i,npc in enumerate(pc_list):
     load_path = dir_path + "/" + npc
