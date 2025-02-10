@@ -3,7 +3,20 @@ import open3d as o3d
 import os
 
 #var
-dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/19-07-2024_14-44-02"
+#dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/19-07-2024_14-44-02"
+#dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/14-11-2024_16-44-25" # real big
+#dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/19-11-2024_12-56-58" # dani pipe
+#dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/19-11-2024_13-28-40" # dani pipe 2
+#dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/19-11-2024_14-01-56" # spool slice a
+#dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/19-11-2024_14-55-00" # spool slice a 2
+#dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/19-11-2024_16-32-40" # spool slice b 1
+#dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/MESH-DIR/tati_pipe_19-11-2024_17-19-31" # tati pipe
+#dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/06-12-2024_12-53-13" # hex 1
+#dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/10-12-2024_15-08-54" # hex 2
+#dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/16-12-2024_18-57-41" #meia cana
+#dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/17-12-2024_11-52-22" # test spray 3d
+#dir_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/17-12-2024_16-27-15" # teste shampoo seco
+dir_path =  "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/29-01-2025_19-13-47" # hex 3
 pc_list = sorted(os.listdir(dir_path))
 
 
