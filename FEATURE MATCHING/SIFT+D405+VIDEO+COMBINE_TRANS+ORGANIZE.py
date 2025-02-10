@@ -605,6 +605,6 @@ for i, npc in enumerate(pc_list):
         A_transformed = (R_list[i] * A.T) + np.tile(t_list[i], (1, n))
         A_transformed = A_transformed.T
         pc1 = np.array(A_transformed)
-        load_path = pc_path + "/" + npc
+        load_path = trans_path  + npc
         np.save(load_path, pc1)
 plot3D(1,pc_path)
