@@ -4,8 +4,11 @@ import matplotlib.cm as plt
 import matplotlib.cm
 # Loading and visualizing a PLY point cloud
 print("Loading a PLY point cloud, printing, and rendering...")
-file_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/MERGED/data.ply"
-out_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/MESH/mesh.obj"
+#file_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/MERGED/data.ply"
+#file_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/MERGED/dani-pipe-2.ply" #dani pipe 2 ok
+#file_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/MERGED/tati-pipe.ply"
+file_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/MERGED/hex-03.ply"
+out_path = "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/MESH/hex-03.obj"
 pcd = o3d.io.read_point_cloud(file_path)
 # Printing point cloud information and points array
 print(pcd)
