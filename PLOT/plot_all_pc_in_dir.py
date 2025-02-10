@@ -18,6 +18,15 @@ from matplotlib.pyplot import cm
 dir_path =  "/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/PC-T/11-12-2024_15-14-19"
 pc_list = sorted(os.listdir(dir_path))
 
+import numpy as np
+import os
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.cm as cm
+
+
+def plot3D(f_num, path):
+    pc_list = sorted(os.listdir(path))
 
 # Create a 3D figure
 fig = plt.figure(1)
