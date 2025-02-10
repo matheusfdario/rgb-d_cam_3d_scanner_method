@@ -196,7 +196,51 @@ def euclidean_transform_3D(A, B):
     t = -R * centroid_A.T + centroid_B.T
 
     return R, t
+def plot3D(f_num, path):
+    pc_list = sorted(os.listdir(path))
+    pc_list = pc_list[:-1]
+    # Create a 3D figure
+    fig = plt.figure(f_num)
+    ax = fig.add_subplot(111, projection='3d')
 
+    # Set the axis labels
+    ax.set_xlabel('X Label')
+    ax.set_ylabel('Y Label')
+    ax.set_zlabel('Z Label')
+    ax.set_title('Pointclouds 2')
+
+    # Initialize lists to collect all point coordinates
+    all_x, all_y, all_z = [], [], []
+
+    colors = cm.rainbow(np.linspace(0, 1, len(pc_list)))
+    for i, npc in enumerate(pc_list):
+        load_path = os.path.join(path, npc)
+        print(load_path)
+        pc = np.load(load_path)
+        x = pc[::1000, 0]
+        y = pc[::1000, 1]
+        z = pc[::1000, 2]
+
+        # Collect the points for later adjustment of the aspect ratio
+        all_x.extend(x)
+        all_y.extend(y)
+        all_z.extend(z)
+
+        # Plot the point cloud data
+        ax.scatter(x, y, z, s=1.0, color=colors[i], alpha=0.75)
+
+    # Calculate the ranges for each axis
+    max_range = np.array([max(all_x) - min(all_x), max(all_y) - min(all_y), max(all_z) - min(all_z)]).max() / 2.0
+    mid_x = (max(all_x) + min(all_x)) * 0.5
+    mid_y = (max(all_y) + min(all_y)) * 0.5
+    mid_z = (max(all_z) + min(all_z)) * 0.5
+
+    # Set the limits for each axis to make them equal
+    ax.set_xlim(mid_x - max_range, mid_x + max_range)
+    ax.set_ylim(mid_y - max_range, mid_y + max_range)
+    ax.set_zlim(mid_z - max_range, mid_z + max_range)
+
+    plt.show()
 # Setup:/media/matheusfdario/HD/REPOS/rgb-d_cam_3d_scanner_method/DATA/20240426_143549.bag
 # Set the playback so it's not done in real-time: https://github.com/IntelRealSense/librealsense/issues/3682#issuecomment-642344385
 dist_list = []
